@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hồng Lĩnh ❤ Ngọc Ánh | Thiệp Cưới</title>
+  <meta name="description" content="Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng tôi — Hồng Lĩnh & Ngọc Ánh." />
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Thiệp cưới Hồng Lĩnh & Ngọc Ánh" />
+  <meta property="og:description" content="Trân trọng kính mời bạn đến chung vui trong ngày hạnh phúc của chúng tôi." />
+  <meta property="og:image" content="statics/images/header.jpg" />
+  <meta property="og:type" content="website" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Great+Vibes&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="statics/css/style.css" />
+</head>
+<body>
+
+  <!-- ============ NHẠC NỀN ============ -->
+  <audio id="bgMusic" loop preload="auto">
+    <source src="statics/audio/50-nam-ve-sau.mp3" type="audio/mpeg" />
+  </audio>
+  <button class="music-toggle" id="musicToggle" aria-label="Bật/tắt nhạc" title="Bật/tắt nhạc">
+    <span class="music-toggle__icon">&#9835;</span>
+  </button>
+
+  <main class="invite">
+
+    <!-- ============ 1. HEADER / HERO ============ -->
+    <header class="hero reveal">
+      <div class="hero__media">
+        <img src="statics/images/header.jpg" alt="Ảnh cưới Hồng Lĩnh và Ngọc Ánh" />
+        <div class="hero__overlay"></div>
+      </div>
+      <div class="hero__content">
+        <p class="hero__welcome">Welcome to Our Wedding</p>
+        <div class="hero__double">&#22221;</div>
+        <h1 class="hero__names">
+          <span>Hồng Lĩnh</span>
+          <span class="hero__amp">&amp;</span>
+          <span>Ngọc Ánh</span>
+        </h1>
+        <p class="hero__date" id="heroDate">— · —</p>
+      </div>
+      <div class="hero__scroll" aria-hidden="true"><span></span></div>
+    </header>
+
+    <!-- ============ 2. THÔNG TIN LỄ CƯỚI ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Lễ Cưới<span class="band__deco">&#10070;</span></div>
+      <div class="families">
+        <div class="family">
+          <h3 class="family__title">Nhà Trai</h3>
+          <p class="family__parent">Ông Phan Văn Quảng</p>
+          <p class="family__parent">Bà Lê Thị Hiên</p>
+          <p class="family__addr">Xóm 21, Xã Thiên Nhẫn,<br />Tỉnh Nghệ An</p>
+        </div>
+        <div class="families__amp">&#22221;</div>
+        <div class="family">
+          <h3 class="family__title">Nhà Gái</h3>
+          <p class="family__parent">Ông Phạm Công Thiềm</p>
+          <p class="family__parent">Bà Trần Thị Nga</p>
+          <p class="family__addr">Xóm Vĩnh Tháp, Xã Hợp Minh,<br />Tỉnh Nghệ An</p>
+        </div>
+      </div>
+
+      <div class="couple-names">
+        <p class="couple-names__pre">Trân trọng báo tin lễ thành hôn của hai con</p>
+        <h2 class="couple-names__name">Hồng Lĩnh</h2>
+        <span class="couple-names__amp">&amp;</span>
+        <h2 class="couple-names__name">Ngọc Ánh</h2>
+      </div>
+    </section>
+
+    <!-- ============ 3. ALBUM ẢNH CƯỚI ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Album Ảnh Cưới<span class="band__deco">&#10070;</span></div>
+      <div class="gallery" id="gallery">
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-2.jpg" alt="Ảnh cưới 2" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-3.jpg" alt="Ảnh cưới 3" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-4.jpg" alt="Ảnh cưới 4" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-5.jpg" alt="Ảnh cưới 5" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-6.jpg" alt="Ảnh cưới 6" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-7.jpg" alt="Ảnh cưới 7" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-8.jpg" alt="Ảnh cưới 8" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-9.jpg" alt="Ảnh cưới 9" /></figure>
+        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-10.jpg" alt="Ảnh cưới 10" /></figure>
+      </div>
+    </section>
+
+    <!-- ============ 4. THÔNG TIN TIỆC CƯỚI + LỊCH ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Tiệc Cưới<span class="band__deco">&#10070;</span></div>
+
+      <p class="section__lead">Trân trọng kính mời tới dự bữa tiệc chung vui cùng gia đình chúng tôi</p>
+
+      <div class="countdown" id="countdown" aria-label="Đếm ngược tới ngày cưới">
+        <div class="countdown__box"><strong data-cd="days">--</strong><span>Ngày</span></div>
+        <div class="countdown__box"><strong data-cd="hours">--</strong><span>Giờ</span></div>
+        <div class="countdown__box"><strong data-cd="mins">--</strong><span>Phút</span></div>
+        <div class="countdown__box"><strong data-cd="secs">--</strong><span>Giây</span></div>
+      </div>
+
+      <div class="parties">
+        <div class="party">
+          <span class="party__time">17:00</span>
+          <h4 class="party__who">Tiệc Nhà Gái</h4>
+          <p class="party__date">Thứ Bảy, 27/06/2026</p>
+          <p class="party__place">Tại tư gia nhà gái</p>
+          <p class="party__addr">Xóm Vĩnh Tháp, Xã Hợp Minh, Tỉnh Nghệ An</p>
+        </div>
+        <div class="party">
+          <span class="party__time">10:00</span>
+          <h4 class="party__who">Tiệc Nhà Trai</h4>
+          <p class="party__date">Chủ Nhật, 28/06/2026</p>
+          <p class="party__place">Tại tư gia nhà trai</p>
+          <p class="party__addr">Xóm 21, Xã Thiên Nhẫn, Tỉnh Nghệ An</p>
+        </div>
+      </div>
+
+      <div class="calendar" id="calendar">
+        <div class="calendar__head">
+          <span class="calendar__month" id="calMonth">Tháng — năm —</span>
+        </div>
+        <div class="calendar__grid" id="calGrid"></div>
+        <p class="calendar__note">&#10084; Ngày chúng tôi về chung một nhà</p>
+      </div>
+    </section>
+
+    <!-- ============ 5. BẢN ĐỒ ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Chỉ Đường Đến Tiệc Cưới<span class="band__deco">&#10070;</span></div>
+      <div class="map">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d5165.712476025285!2d105.57374237627253!3d18.57621766746995!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3139c7aa3911aee7%3A0x4240abf0e403c29b!2svietnd%20tam%20giap%20nam%20kim!5e1!3m2!1svi!2s!4v1782060801860!5m2!1svi!2s"
+          style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+          title="Bản đồ chỉ đường đến tiệc cưới"></iframe>
+      </div>
+      <a class="map__btn" target="_blank" rel="noopener"
+         href="https://www.google.com/maps/search/?api=1&query=18.5758883,105.575864">
+        Mở Google Maps để chỉ đường
+      </a>
+    </section>
+
+    <!-- ============ 6. LỊCH TRÌNH CƯỚI ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Lịch Trình Cưới<span class="band__deco">&#10070;</span></div>
+      <div class="timeline">
+        <div class="timeline__item">
+          <span class="timeline__time">12:30 · 27/06</span>
+          <div class="timeline__dot"></div>
+          <div class="timeline__body">
+            <h4>Xe đưa đón xuất phát từ Hà Nội</h4>
+            <small>Công Ty Trà Sương Mai Thái Nguyên, Lô 32BT4, 3, Khu đô thị Vinaconex 3, Đại Mỗ, Hà Nội</small>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span class="timeline__time">17:00 · 27/06</span>
+          <div class="timeline__dot"></div>
+          <div class="timeline__body">
+            <h4>Dự tiệc tại tư gia nhà gái</h4>
+            <small>Xóm Vĩnh Tháp, Xã Hợp Minh, Tỉnh Nghệ An</small>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span class="timeline__time">18:30 · 27/06</span>
+          <div class="timeline__dot"></div>
+          <div class="timeline__body">
+            <h4>Di chuyển về tư gia nhà trai</h4>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span class="timeline__time">09:00 · 28/06</span>
+          <div class="timeline__dot"></div>
+          <div class="timeline__body">
+            <h4>Đón dâu</h4>
+          </div>
+        </div>
+        <div class="timeline__item">
+          <span class="timeline__time">10:00 · 28/06</span>
+          <div class="timeline__dot"></div>
+          <div class="timeline__body">
+            <h4>Dự tiệc tại tư gia nhà trai</h4>
+            <small>Xóm 21, Xã Thiên Nhẫn, Tỉnh Nghệ An</small>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ 7. PHONG BAO MỪNG CƯỚI ============ -->
+    <section class="section reveal">
+      <div class="band"><span class="band__deco">&#10070;</span>Phong Bao Mừng Cưới<span class="band__deco">&#10070;</span></div>
+      <p class="section__lead">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi. Nếu ở xa, bạn có thể gửi lời chúc mừng qua mã QR bên dưới.</p>
+      <div class="gifts">
+        <div class="gift">
+          <h4 class="gift__title">Chú Rể · Hồng Lĩnh</h4>
+          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-chu-re.png" alt="Mã QR chuyển khoản Hồng Lĩnh" /></div>
+          <ul class="gift__info">
+            <li><span>Ngân hàng</span><b>VIB</b></li>
+            <li><span>Chủ tài khoản</span><b>Hồng Lĩnh</b></li>
+            <li><span>Số tài khoản</span><b class="gift__acc">005704060245366</b></li>
+          </ul>
+          <button class="gift__copy" data-copy="005704060245366">Sao chép số tài khoản</button>
+        </div>
+
+        <div class="gift">
+          <h4 class="gift__title">Cô Dâu · Ngọc Ánh</h4>
+          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-co-dau.png" alt="Mã QR chuyển khoản Ngọc Ánh" /></div>
+          <ul class="gift__info">
+            <li><span>Ngân hàng</span><b>BIDV</b></li>
+            <li><span>Chủ tài khoản</span><b>Ngọc Ánh</b></li>
+            <li><span>Số tài khoản</span><b class="gift__acc">5180607149</b></li>
+          </ul>
+          <button class="gift__copy" data-copy="5180607149">Sao chép số tài khoản</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============ FOOTER ============ -->
+    <footer class="footer reveal">
+      <div class="footer__double">&#22221;</div>
+      <p class="footer__thanks">Thank You!</p>
+      <h2 class="footer__names">Hồng Lĩnh &amp; Ngọc Ánh</h2>
+      <p class="footer__msg">Rất hân hạnh được đón tiếp &amp; chung vui cùng bạn trong ngày trọng đại!</p>
+    </footer>
+  </main>
+
+  <!-- ============ LIGHTBOX ============ -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" id="lbClose" aria-label="Đóng">&times;</button>
+    <button class="lightbox__nav lightbox__prev" id="lbPrev" aria-label="Ảnh trước">&#8249;</button>
+    <img class="lightbox__img" id="lbImg" src="" alt="" />
+    <button class="lightbox__nav lightbox__next" id="lbNext" aria-label="Ảnh sau">&#8250;</button>
+  </div>
+
+  <!-- ============ TOAST ============ -->
+  <div class="toast" id="toast"></div>
+
+  <script src="statics/js/main.js"></script>
+</body>
+</html>
