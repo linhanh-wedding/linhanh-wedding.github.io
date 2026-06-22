@@ -20,7 +20,7 @@
 </head>
 <body>
 
-  <!-- ============ NHẠC NỀN ============ -->
+  <!-- ============ BACKGROUND MUSIC ============ -->
   <audio id="bgMusic" loop preload="auto">
     <source src="statics/audio/50-nam-ve-sau.mp3" type="audio/mpeg" />
   </audio>
@@ -28,10 +28,10 @@
     <span class="music-toggle__icon">&#9835;</span>
   </button>
 
-  <!-- ============ NAVIGATION (cố định trên cùng — cả mobile & desktop) ============ -->
+  <!-- ============ NAVIGATION (fixed top — mobile & desktop) ============ -->
   <nav class="nav" id="nav" aria-label="Điều hướng">
     <div class="nav__inner">
-      <a class="nav__brand" href="#home">HL <span>&amp;</span> NA</a>
+      <a class="nav__brand" href="#home">Lĩnh<span>&amp;</span>Ánh</a>
       <button class="nav__toggle" id="navToggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="navLinks">
         <span></span><span></span><span></span>
       </button>
@@ -45,7 +45,7 @@
     </div>
   </nav>
 
-  <!-- ============ ẢNH CƯỚI GHIM HAI BÊN (chỉ hiện trên desktop — đổ ngẫu nhiên qua JS) ============ -->
+  <!-- ============ SIDE-PINNED PHOTOS (desktop only — journey, populated via JS) ============ -->
   <div class="photo-pins" id="photoPins" aria-hidden="true"></div>
 
   <main class="invite">
@@ -69,7 +69,7 @@
       <div class="hero__scroll" aria-hidden="true"><span></span></div>
     </header>
 
-    <!-- ============ 2. THÔNG TIN LỄ CƯỚI ============ -->
+    <!-- ============ 2. WEDDING DETAILS ============ -->
     <section class="section reveal" id="le-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Lễ Cưới<span class="band__deco">&#10070;</span></div>
       <div class="families">
@@ -96,7 +96,7 @@
       </div>
     </section>
 
-    <!-- ============ 3. ALBUM ẢNH CƯỚI (ẩn trên desktop — đã ghim ảnh hai bên) ============ -->
+    <!-- ============ 3. WEDDING ALBUM ============ -->
     <section class="section reveal" id="album">
       <div class="band"><span class="band__deco">&#10070;</span>Album Ảnh Cưới<span class="band__deco">&#10070;</span></div>
       <div class="gallery" id="gallery"></div>
@@ -107,7 +107,7 @@
       </div>
     </section>
 
-    <!-- ============ 4. THÔNG TIN TIỆC CƯỚI + LỊCH ============ -->
+    <!-- ============ 4. RECEPTION INFO + CALENDAR ============ -->
     <section class="section reveal" id="tiec-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Tiệc Cưới<span class="band__deco">&#10070;</span></div>
 
@@ -146,7 +146,7 @@
       </div>
     </section>
 
-    <!-- ============ 5. BẢN ĐỒ ============ -->
+    <!-- ============ 5. MAP ============ -->
     <section class="section reveal" id="chi-duong">
       <div class="band"><span class="band__deco">&#10070;</span>Chỉ Đường Đến Tiệc Cưới<span class="band__deco">&#10070;</span></div>
       <div class="map">
@@ -161,7 +161,7 @@
       </a>
     </section>
 
-    <!-- ============ 6. LỊCH TRÌNH CƯỚI ============ -->
+    <!-- ============ 6. WEDDING SCHEDULE ============ -->
     <section class="section reveal" id="lich-trinh">
       <div class="band"><span class="band__deco">&#10070;</span>Lịch Trình Cưới<span class="band__deco">&#10070;</span></div>
       <div class="timeline">
@@ -208,7 +208,7 @@
       </div>
     </section>
 
-    <!-- ============ 7. PHONG BAO MỪNG CƯỚI ============ -->
+    <!-- ============ 7. WEDDING GIFT ENVELOPE ============ -->
     <section class="section reveal" id="mung-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Phong Bao Mừng Cưới<span class="band__deco">&#10070;</span></div>
       <p class="section__lead">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi. Và nếu muốn trao thêm chút tấm lòng mừng cưới, cô dâu chú rể rất sẵn lòng đón nhận qua phiên bản "phong bao QR 4.0" bên dưới nha.</p>
@@ -233,7 +233,7 @@
     </footer>
   </main>
 
-  <!-- ============ MODAL PHONG BAO (QR) ============ -->
+  <!-- ============ GIFT ENVELOPE MODAL (QR) ============ -->
   <div class="gift-modal" id="giftModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mã QR mừng cưới">
     <div class="gift-modal__panel">
       <button class="gift-modal__close" id="giftModalClose" aria-label="Đóng">&times;</button>

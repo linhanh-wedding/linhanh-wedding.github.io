@@ -1,6 +1,6 @@
 /* =========================================================
-   THIỆP CƯỚI · Hồng Lĩnh & Ngọc Ánh
-   Palette: burgundy + cream + gold (truyền thống)
+   WEDDING INVITATION · Hồng Lĩnh & Ngọc Ánh
+   Palette: burgundy + cream + gold (traditional)
    ========================================================= */
 
 :root {
@@ -37,7 +37,7 @@ body {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23c8a24a' fill-opacity='0.05'%3E%3Cpath d='M30 0l6 18 18 0-14.5 11 5.5 18-15-11-15 11 5.5-18L6 18l18 0z'/%3E%3C/g%3E%3C/svg%3E");
   line-height: 1.6;
   overflow-x: hidden;
-  position: relative;   /* mốc cho ảnh ghim hai bên (.photo-pins) */
+  position: relative;   /* positioning anchor for the side pins (.photo-pins) */
 }
 
 img { display: block; max-width: 100%; }
@@ -50,11 +50,11 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 0 60px -20px rgba(78, 12, 24, .4);
   position: relative;
   overflow: hidden;
-  z-index: 1;            /* nằm trên lớp ảnh ghim hai bên */
+  z-index: 1;            /* sits above the side-pins layer */
 }
 
 /* ===================== NAVIGATION BAR ===================== */
-/* Mobile-first: thanh cố định trên cùng, các mục thu trong menu hamburger */
+/* Mobile-first: fixed top bar, items collapsed into a hamburger menu */
 .nav {
   position: fixed;
   top: 0; left: 0; right: 0;
@@ -83,7 +83,7 @@ img { display: block; max-width: 100%; }
 }
 .nav__brand span { color: var(--gold-light); font-family: var(--script); }
 
-/* nút hamburger */
+/* hamburger button */
 .nav__toggle {
   display: flex; flex-direction: column; justify-content: center; gap: 5px;
   width: 40px; height: 36px; padding: 8px;
@@ -98,7 +98,7 @@ img { display: block; max-width: 100%; }
 .nav.is-open .nav__toggle span:nth-child(2) { opacity: 0; }
 .nav.is-open .nav__toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-/* menu thả xuống (mobile) */
+/* dropdown menu (mobile) */
 .nav__links {
   list-style: none;
   position: absolute;
@@ -128,16 +128,16 @@ img { display: block; max-width: 100%; }
 }
 .nav.is-scrolled .nav__inner { padding-top: 10px; padding-bottom: 10px; }
 
-/* ===================== ẢNH CƯỚI GHIM HAI BÊN ===================== */
+/* ===================== SIDE-PINNED PHOTOS ===================== */
 .photo-pins {
   position: absolute;
   inset: 0;
-  z-index: 0;            /* sau nội dung thiệp, hiện ở khoảng trống hai bên */
-  pointer-events: none;  /* chỉ các ảnh ghim mới bắt sự kiện */
-  display: none;         /* chỉ hiện trên desktop rộng */
+  z-index: 0;            /* behind the invitation content, shows in the side gaps */
+  pointer-events: none;  /* only the pinned photos capture events */
+  display: none;         /* only shown on wide desktop */
 }
-/* mỗi bên là một "giá treo" nằm trong khoảng trống, cách mép cột nội dung
-   (nửa cột = 360px) một quãng thoáng để ảnh không sát trung tâm */
+/* each side is a "rail" sitting in the gap, offset from the content column edge
+   (half column = 360px) by a comfortable margin so photos aren't too central */
 .pin-rail {
   position: absolute;
   top: 0; bottom: 0;
@@ -146,8 +146,8 @@ img { display: block; max-width: 100%; }
 .pin-rail--l { right: calc(50% + 396px); }
 .pin-rail--r { left:  calc(50% + 396px); }
 
-/* sợi dây hành trình: nối 01→10 trái↔phải liên tiếp; đoạn vắt qua giữa nằm
-   sau cột nội dung (z-index thấp hơn .invite) nên không đè lên trung tâm */
+/* journey cord: links 01→10 left↔right in sequence; the middle-crossing
+   segment sits behind the content column (lower z-index than .invite) so it never covers the center */
 .journey-cord {
   position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
@@ -162,7 +162,7 @@ img { display: block; max-width: 100%; }
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
-/* ghim cố định đầu sợi dây (phía trên ảnh 01) */
+/* fixed pin at the cord's start (above photo 01) */
 .journey-cord .cord-pin__ring  { fill: rgba(110,16,35,.18); }
 .journey-cord .cord-pin__head  { fill: var(--gold); stroke: var(--maroon-dark); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
 .journey-cord .cord-pin__shine { fill: rgba(255,255,255,.85); }
@@ -192,7 +192,7 @@ img { display: block; max-width: 100%; }
   border-radius: 2px;
   display: block;
 }
-/* nút thắt vàng nơi ảnh "treo" vào sợi dây */
+/* gold knot where each photo "hangs" on the cord */
 .pin::before {
   content: "";
   position: absolute;
@@ -205,7 +205,7 @@ img { display: block; max-width: 100%; }
   z-index: 2;
 }
 .pin:hover {
-  animation: none;                 /* dừng trôi để phóng ảnh khi rê chuột */
+  animation: none;                 /* stop drifting to enlarge the photo on hover */
   transform: rotate(0deg) scale(1.07);
   box-shadow: 0 28px 52px -16px rgba(78,12,24,.6);
   z-index: 6;
@@ -213,7 +213,7 @@ img { display: block; max-width: 100%; }
 
 /* ===================== SECTION & BAND ===================== */
 .section { padding: 46px 26px 50px; }
-.section, .hero { scroll-margin-top: 76px; }   /* chừa chỗ cho nav cố định */
+.section, .hero { scroll-margin-top: 76px; }   /* leave room for the fixed nav */
 
 .section__lead {
   text-align: center;
@@ -317,7 +317,7 @@ img { display: block; max-width: 100%; }
   justify-content: flex-start;
   text-align: center;
   color: #fff;
-  padding: 96px 24px 64px;   /* chừa khoảng trên cho thanh nav cố định */
+  padding: 96px 24px 64px;   /* leave top space for the fixed nav bar */
   overflow: hidden;
 }
 .hero__media { position: absolute; inset: 0; z-index: 0; }
@@ -340,6 +340,7 @@ img { display: block; max-width: 100%; }
   font-family: var(--script);
   font-size: clamp(2rem, 9vw, 3.4rem);
   color: var(--gold-light);
+  white-space: nowrap;   /* keep one line to match the names width */
   text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 4px 22px rgba(0,0,0,.6);
 }
 .hero__double {
@@ -444,12 +445,12 @@ img { display: block; max-width: 100%; }
   font-size: 1.4rem;
   background: rgba(110,16,35,.0);
   opacity: 0; transition: opacity .35s ease;
-  pointer-events: none;   /* để click xuyên qua, mở được lightbox */
+  pointer-events: none;   /* let clicks pass through to open the lightbox */
 }
 .gallery__item:hover img { transform: scale(1.08); }
 .gallery__item:hover::after { opacity: 1; background: rgba(110,16,35,.25); }
 
-/* phân trang album: mỗi trang 9 ảnh, bấm nút để xem thêm */
+/* album pagination: 9 photos per page, click the buttons to see more */
 .gallery__pager {
   display: flex; align-items: center; justify-content: center;
   gap: 18px; margin-top: 18px;
@@ -654,7 +655,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 .gift__acc { color: var(--maroon) !important; letter-spacing: .04em; }
 .gift__copy { font-family: var(--sans); font-size: .85rem; }
 
-/* ===================== PHONG BAO (LÌ XÌ) ===================== */
+/* ===================== GIFT ENVELOPE (red envelope) ===================== */
 .envelope-wrap { display: flex; justify-content: center; margin-top: 26px; }
 .envelope {
   background: none; border: none; cursor: pointer; padding: 10px;
@@ -671,7 +672,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   overflow: hidden;
   transition: transform .35s ease, box-shadow .35s ease;
 }
-/* đường gân vàng trang trí góc dưới */
+/* decorative gold streaks at the bottom corners */
 .envelope__body::before,
 .envelope__body::after {
   content: ""; position: absolute; bottom: 0; width: 60%; height: 100%;
@@ -679,7 +680,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 .envelope__body::before { left: 0; }
 .envelope__body::after  { right: 0; transform: scaleX(-1); }
-/* nắp phong bao hình tam giác phía trên */
+/* triangular envelope flap at the top */
 .envelope__flap {
   position: absolute; top: 0; left: 0; right: 0; height: 78px;
   background: linear-gradient(180deg, var(--red), #7a1626);
@@ -689,7 +690,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   transition: transform .45s ease, opacity .45s ease;
   z-index: 3;
 }
-/* dấu triện chữ Hỷ ở giữa */
+/* the 囍 (double happiness) seal in the center */
 .envelope__seal {
   position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
   width: 54px; height: 54px; border-radius: 50%;
@@ -714,7 +715,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 .envelope:focus { outline: none; }
 
-/* ===================== MODAL PHONG BAO (QR) ===================== */
+/* ===================== GIFT ENVELOPE MODAL (QR) ===================== */
 .gift-modal {
   position: fixed; inset: 0; z-index: 96;
   background: rgba(28,6,12,.94);
@@ -775,7 +776,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 .music-toggle:hover { transform: scale(1.08); }
 .music-toggle.is-playing .music-toggle__icon { animation: spin 4s linear infinite; }
-/* Khi chưa phát: nhấp nháy nhẹ để mời người xem chạm bật nhạc */
+/* When not playing: gentle pulse to invite the visitor to tap and start the music */
 .music-toggle:not(.is-playing) { animation: musicPulse 1.8s ease-in-out infinite; }
 
 /* ===================== LIGHTBOX ===================== */
@@ -787,7 +788,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 .lightbox.is-open { opacity: 1; visibility: visible; }
 .lightbox__img {
-  /* ảnh gốc cao ~684px → phóng to gấp ~1.5 lần (~1040px), giới hạn theo màn hình */
+  /* source is ~684px tall → enlarge ~1.5x (~1040px), capped to the screen */
   width: auto;
   height: min(1040px, 90vh);
   max-width: 94vw;
@@ -829,7 +830,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 @keyframes scrollDot { 0% { opacity: 0; top: 7px; } 50% { opacity: 1; } 100% { opacity: 0; top: 22px; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes envFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-/* ảnh trôi nổi + đung đưa (lắc) quanh độ nghiêng --rot của từng ảnh */
+/* photos drift + sway around each one's --rot tilt */
 @keyframes pinFloat {
   0%   { transform: translateY(0)     rotate(var(--rot)); }
   25%  { transform: translateY(-8px)  rotate(calc(var(--rot) + 2.6deg)); }
@@ -847,7 +848,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 
 /* ===================== DESKTOP (web) ===================== */
-/* Từ tablet ngang trở lên: bỏ hamburger, trải các mục ngang trên thanh nav */
+/* From landscape tablet up: drop the hamburger, lay items out across the nav */
 @media (min-width: 900px) {
   .nav__toggle { display: none; }
   .nav__links {
@@ -878,7 +879,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .nav__inner { padding: 16px 34px; }
 }
 
-/* Màn rộng: nền hai bên sang trọng hơn + ghim ảnh & ẩn mục Album */
+/* Wide screens: fancier side background + side pins */
 @media (min-width: 1100px) {
   body {
     background:
@@ -910,9 +911,13 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .gifts, .parties { grid-template-columns: 1fr; }
   .gift__qr { width: 180px; height: 180px; }
   .hero__roles { gap: 14px; }
-  /* Mobile: thu nhỏ chữ 囍 và tên để không tràn lên mặt ảnh */
-  .hero__double { font-size: 1.2rem; margin: 0 0 4px; }
-  .hero__names { font-size: clamp(1.6rem, 7.4vw, 2.3rem); }
+  /* Mobile: pull the image down to start at the nav + compact the text so it doesn't hit the faces */
+  .hero { padding-top: 84px; }            /* lower the text block for balance */
+  .hero__media { top: 54px; }              /* image starts right below the banner */
+  .hero__welcome { font-size: clamp(1.7rem, 8vw, 2.6rem); }
+  .hero__double { font-size: 1rem; margin: 0 0 2px; }   /* smaller 囍 */
+  .hero__names { font-size: clamp(1.55rem, 7.2vw, 2.2rem); line-height: 1.04; }  /* tighter line spacing */
+  .hero__date { margin-top: 6px; font-size: .92rem; }
 }
 
 @media (prefers-reduced-motion: reduce) {

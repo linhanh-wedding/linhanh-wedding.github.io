@@ -1,42 +1,41 @@
 /* =========================================================
-   THIỆP CƯỚI · Hồng Lĩnh & Ngọc Ánh — main.js
+   WEDDING INVITATION · Hồng Lĩnh & Ngọc Ánh — main.js
    ========================================================= */
 
-/* ⚠️⚠️  CHỈNH THÔNG TIN NGÀY CƯỚI Ở ĐÂY  ⚠️⚠️
-   - date:  ngày cưới theo DƯƠNG LỊCH, định dạng "YYYY-MM-DD"
-   - time:  giờ bắt đầu (dùng cho đếm ngược), định dạng "HH:MM"
-   - lunar: ngày âm lịch hiển thị (để trống "" nếu không cần) */
+/* ⚠️⚠️  EDIT THE WEDDING DATE INFO HERE  ⚠️⚠️
+   - date:  wedding date (SOLAR calendar), format "YYYY-MM-DD"
+   - time:  start time (used for the countdown), format "HH:MM"
+   - lunar: lunar date to display (leave "" if not needed) */
 const WEDDING_CONFIG = {
-  date:  "2026-06-28",   // <-- THAY NGÀY CƯỚI THẬT VÀO ĐÂY
+  date:  "2026-06-28",   // <-- PUT THE REAL WEDDING DATE HERE
   time:  "10:00",
-  lunar: ""              // ví dụ: "Tức ngày 13 tháng 10 năm Bính Ngọ"
+  lunar: ""              // e.g. "Tức ngày 13 tháng 10 năm Bính Ngọ"
 };
 
-/* ⚠️  DANH SÁCH ẢNH CƯỚI  ⚠️
-   Tất cả ảnh nằm trong thư mục statics/images/anh-cuoi/.
-   Thêm/bớt ảnh thì chỉ cần sửa danh sách tên file dưới đây.
-   Ảnh sẽ được hiển thị theo THỨ TỰ NGẪU NHIÊN mỗi lần tải trang. */
+/* ⚠️  WEDDING PHOTO LIST  ⚠️
+   All photos live in the statics/images/anh-cuoi/ folder.
+   To add/remove photos, just edit the filename list below.
+   Photos are shown in RANDOM ORDER on each page load. */
 const PHOTO_DIR = "statics/images/anh-cuoi/";
-// thứ tự ngẫu nhiên của TẤT CẢ ảnh (dùng chung cho lightbox để lướt đủ bộ)
+// random order of ALL photos (shared by the lightbox to browse the full set)
 let PHOTO_LIST = [];
 const PHOTOS = [
   "anh-cuoi-1.jpg",  "anh-cuoi-2.jpg",  "anh-cuoi-3.jpg",  "anh-cuoi-4.jpg",
   "anh-cuoi-5.jpg",  "anh-cuoi-6.jpg",  "anh-cuoi-7.jpg",  "anh-cuoi-8.jpg",
   "anh-cuoi-9.jpg",  "anh-cuoi-10.jpg", "anh-cuoi-11.jpg", "anh-cuoi-12.jpg",
   "anh-cuoi-13.jpg", "anh-cuoi-14.jpg", "anh-cuoi-15.jpg", "anh-cuoi-16.jpg",
-  "anh-cuoi-17.jpg", "anh-cuoi-18.jpg", "anh-cuoi-19.jpg", "anh-cuoi-20.jpg",
-  "anh-cuoi-21.jpg"
+  "anh-cuoi-17.jpg", "anh-cuoi-18.jpg"
 ];
 
-/* 🌿 HÀNH TRÌNH — 10 ảnh ghim hai bên (bản web), theo thứ tự timeline 01→10.
-   Lẻ (01,03,05,07,09) bên trái · Chẵn (02,04,06,08,10) bên phải. */
+/* 🌿 JOURNEY — 10 photos pinned on both sides (web), in timeline order 01→10.
+   Odd (01,03,05,07,09) on the left · Even (02,04,06,08,10) on the right. */
 const JOURNEY_DIR = "statics/images/hanh-trinh/";
 const JOURNEY = [
   "hanhtrinh-01.jpg", "hanhtrinh-02.jpg", "hanhtrinh-03.jpg", "hanhtrinh-04.jpg",
   "hanhtrinh-05.jpg", "hanhtrinh-06.jpg", "hanhtrinh-07.jpg", "hanhtrinh-08.jpg",
   "hanhtrinh-09.jpg", "hanhtrinh-10.jpg"
 ];
-let JOURNEY_LIST = [];   // src đầy đủ theo thứ tự timeline, dùng cho lightbox
+let JOURNEY_LIST = [];   // full srcs in timeline order, used by the lightbox
 
 document.addEventListener("DOMContentLoaded", () => {
   setupMusic();
@@ -45,6 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGalleryPager();
   setupJourneyCord();
   renderHeroDate();
+  setupHeroFit();
   renderCalendar();
   startCountdown();
   setupGalleryLightbox();
@@ -53,9 +53,9 @@ document.addEventListener("DOMContentLoaded", () => {
   setupReveal();
 });
 
-/* ---------- ĐỔ ẢNH CƯỚI (NGẪU NHIÊN) VÀO ALBUM & GHIM HAI BÊN ---------- */
+/* ---------- POPULATE ALBUM (RANDOM) & SIDE PINS ---------- */
 function renderPhotos() {
-  // trộn ngẫu nhiên (Fisher–Yates)
+  // shuffle randomly (Fisher–Yates)
   const shuffle = (arr) => {
     const a = arr.slice();
     for (let i = a.length - 1; i > 0; i--) {
@@ -65,7 +65,7 @@ function renderPhotos() {
     return a;
   };
   const list = shuffle(PHOTOS);
-  PHOTO_LIST = list.map((f) => PHOTO_DIR + f);   // dùng cho lightbox lướt đủ bộ
+  PHOTO_LIST = list.map((f) => PHOTO_DIR + f);   // used by the lightbox to browse the full set
 
   const gallery = document.getElementById("gallery");
   if (gallery) {
@@ -74,7 +74,7 @@ function renderPhotos() {
     ).join("");
   }
 
-  // Ghim hai bên: HÀNH TRÌNH theo timeline (cố định, không ngẫu nhiên).
+  // Side pins: JOURNEY in timeline order (fixed, not random).
   JOURNEY_LIST = JOURNEY.map((f) => JOURNEY_DIR + f);
   const pins = document.getElementById("photoPins");
   if (pins) {
@@ -85,7 +85,7 @@ function renderPhotos() {
     const durs   = [7.5, 8.2, 6.8, 7.9, 7.2, 8.5, 6.6, 8.0, 7.4, 7.7];
     const delays = [-0.5, -2.0, -1.2, -3.1, -0.8, -2.6, -1.7, -3.6, -1.0, -2.3];
 
-    // lẻ → trái, chẵn → phải, giữ đúng thứ tự 01..10
+    // odd → left, even → right, keep order 01..10
     const leftJ  = JOURNEY.filter((_, i) => i % 2 === 0);  // 01,03,05,07,09
     const rightJ = JOURNEY.filter((_, i) => i % 2 === 1);  // 02,04,06,08,10
 
@@ -96,7 +96,7 @@ function renderPhotos() {
 
       let figs = "";
       for (let i = 0; i < n; i++) {
-        const num = JOURNEY.indexOf(photos[i]) + 1;   // số thứ tự timeline 1..10
+        const num = JOURNEY.indexOf(photos[i]) + 1;   // timeline sequence number 1..10
         figs += `<figure class="pin" data-seq="${num}" style="--rot:${rots[i]}deg; --dur:${durs[di % durs.length]}s; --delay:${delays[di % delays.length]}s; top:${tops[i]}%">` +
                 `<img class="js-photo" data-group="journey" loading="lazy" src="${JOURNEY_DIR}${photos[i]}" alt="Hành trình ${num}" /></figure>`;
         di++;
@@ -108,10 +108,10 @@ function renderPhotos() {
   }
 }
 
-/* ---------- 4c. SỢI DÂY HÀNH TRÌNH (nối 01→10, trái↔phải liên tiếp) ---------- */
-// Vẽ một sợi dây duy nhất đi qua 10 ảnh theo đúng thứ tự timeline. Đoạn vắt
-// qua giữa nằm SAU cột nội dung (z-index thấp hơn .invite) nên không đè lên
-// phần trung tâm — chỉ hiện ở khoảng trống hai bên.
+/* ---------- 4c. JOURNEY CORD (links 01→10, left↔right in sequence) ---------- */
+// Draw a single cord passing through all 10 photos in timeline order. The
+// segment crossing the middle sits BEHIND the content column (lower z-index
+// than .invite) so it never covers the center — only shows in the side gaps.
 function setupJourneyCord() {
   const pins = document.getElementById("photoPins");
   if (!pins) return;
@@ -132,7 +132,7 @@ function redrawJourneyCord() {
     .sort((a, b) => (+a.dataset.seq) - (+b.dataset.seq));
   if (figs.length < 2) return;
 
-  // điểm neo = nút thắt (giữa, sát mép trên) của từng ảnh, tính theo px
+  // anchor = the knot (center, near the top edge) of each photo, in px
   const knots = figs.map((f) => {
     const rail = f.parentElement;
     return {
@@ -141,13 +141,13 @@ function redrawJourneyCord() {
     };
   });
 
-  // điểm ghim bắt đầu: phía trên ảnh 01, sợi dây buông xuống từ đây
+  // starting pin point: above photo 01, the cord hangs down from here
   const start = { x: knots[0].x, y: Math.max(6, knots[0].y - 70) };
   const pts = [start, ...knots];
 
-  // đường cong Catmull–Rom (mềm mại, lượn qua đúng các điểm neo)
+  // Catmull–Rom curve (smooth, flowing through the anchor points)
   const f = (v) => v.toFixed(1);
-  const T = 0.22;   // độ "mềm" của đường cong — lớn hơn = cong mượt hơn
+  const T = 0.22;   // curve "softness" — higher = smoother curve
   let d = `M ${f(pts[0].x)} ${f(pts[0].y)}`;
   for (let i = 0; i < pts.length - 1; i++) {
     const p0 = pts[i - 1] || pts[i];
@@ -168,13 +168,13 @@ function redrawJourneyCord() {
     svg.setAttribute("class", "journey-cord");
     svg.setAttribute("preserveAspectRatio", "none");
     svg.appendChild(document.createElementNS(NS, "path"));
-    // ghim đầu dây: vòng ngoài + đầu ghim + điểm sáng
+    // cord-head pin: outer ring + pin head + highlight
     ["cord-pin__ring", "cord-pin__head", "cord-pin__shine"].forEach((cls) => {
       const c = document.createElementNS(NS, "circle");
       c.setAttribute("class", cls);
       svg.appendChild(c);
     });
-    pins.insertBefore(svg, pins.firstChild);   // sau ảnh (z-index thấp hơn)
+    pins.insertBefore(svg, pins.firstChild);   // behind the photos (lower z-index)
   }
   svg.setAttribute("viewBox", `0 0 ${pins.offsetWidth} ${pins.offsetHeight}`);
   svg.querySelector("path").setAttribute("d", d);
@@ -188,15 +188,15 @@ function redrawJourneyCord() {
   setCircle(".cord-pin__shine", start.x - 2, start.y - 2.4, 1.8);
 }
 
-/* ---------- Ngày tháng tiện ích ---------- */
+/* ---------- Date helpers ---------- */
 function getWeddingDate() {
-  // Tạo Date từ config (giờ địa phương)
+  // Build a Date from config (local time)
   const [y, m, d] = WEDDING_CONFIG.date.split("-").map(Number);
   const [hh, mm] = (WEDDING_CONFIG.time || "00:00").split(":").map(Number);
   return new Date(y, m - 1, d, hh || 0, mm || 0, 0);
 }
 
-/* ---------- 1. NHẠC NỀN ---------- */
+/* ---------- 1. BACKGROUND MUSIC ---------- */
 function setupMusic() {
   const music = document.getElementById("bgMusic");
   const toggle = document.getElementById("musicToggle");
@@ -207,7 +207,7 @@ function setupMusic() {
     return music.play().then(() => {
       toggle.classList.add("is-playing");
     }).catch(() => {
-      // Trình duyệt chặn autoplay — sẽ phát khi người dùng tương tác lần đầu
+      // Browser blocked autoplay — will play on the user's first interaction
       toggle.classList.remove("is-playing");
     });
   };
@@ -221,13 +221,13 @@ function setupMusic() {
     }
   });
 
-  // Đồng bộ trạng thái icon khi nhạc dừng/chạy
+  // Sync the icon state when the music plays/pauses
   music.addEventListener("play", () => toggle.classList.add("is-playing"));
   music.addEventListener("pause", () => toggle.classList.remove("is-playing"));
 
-  // Thử phát nhạc ngay khi vào web. Trình duyệt thường chặn autoplay
-  // có tiếng, nên nếu bị chặn thì nhạc sẽ tự phát ở lần tương tác đầu
-  // tiên (chạm/bấm/gõ phím/cuộn). Chỉ gỡ listener khi nhạc đã chạy thật.
+  // Try to play as soon as the page loads. Browsers usually block autoplay
+  // with sound, so if blocked the music starts on the first user interaction
+  // (tap/click/keypress/scroll). Remove listeners only once it really plays.
   const wakeEvents = ["pointerdown", "touchend", "click", "keydown", "scroll"];
   const startOnInteract = () => {
     if (!music.paused) return;
@@ -243,7 +243,7 @@ function setupMusic() {
   );
 }
 
-/* ---------- 2. HIỂN THỊ NGÀY Ở HERO ---------- */
+/* ---------- 2. SHOW DATE IN HERO ---------- */
 function renderHeroDate() {
   const el = document.getElementById("heroDate");
   if (!el) return;
@@ -257,7 +257,33 @@ function renderHeroDate() {
   el.textContent = txt;
 }
 
-/* ---------- 3. LỊCH THÁNG ---------- */
+/* ---------- 2b. FIT "WELCOME" WIDTH TO MATCH THE NAMES LINE ---------- */
+function setupHeroFit() {
+  const fit = () => {
+    const w = document.querySelector(".hero__welcome");
+    const n = document.querySelector(".hero__names");
+    if (!w || !n) return;
+    // measure the ACTUAL text width (not the block box) via Range
+    const measure = (el) => {
+      const r = document.createRange();
+      r.selectNodeContents(el);
+      return r.getBoundingClientRect().width;
+    };
+    const namesW = measure(n);
+    w.style.fontSize = "";                       // reset to default size to measure the baseline
+    const base = parseFloat(getComputedStyle(w).fontSize);
+    const welW = measure(w);
+    if (!namesW || !welW) return;
+    w.style.fontSize = (base * namesW / welW).toFixed(2) + "px";
+  };
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+  window.addEventListener("load", fit);
+  let t;
+  window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 120); });
+  fit();
+}
+
+/* ---------- 3. MONTH CALENDAR ---------- */
 function renderCalendar() {
   const grid = document.getElementById("calGrid");
   const monthEl = document.getElementById("calMonth");
@@ -279,7 +305,7 @@ function renderCalendar() {
     grid.appendChild(c);
   });
 
-  // Tuần bắt đầu từ Thứ Hai: chuyển 0=CN..6=T7 sang 0=T2..6=CN
+  // Week starts on Monday: map 0=Sun..6=Sat to 0=Mon..6=Sun
   const firstDow = (new Date(year, month, 1).getDay() + 6) % 7;
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
@@ -298,7 +324,7 @@ function renderCalendar() {
   }
 }
 
-/* ---------- 4. ĐẾM NGƯỢC ---------- */
+/* ---------- 4. COUNTDOWN ---------- */
 function startCountdown() {
   const root = document.getElementById("countdown");
   if (!root) return;
@@ -326,7 +352,7 @@ function startCountdown() {
   const timer = setInterval(tick, 1000);
 }
 
-/* ---------- 4b. PHÂN TRANG ALBUM (9 ảnh / trang) ---------- */
+/* ---------- 4b. ALBUM PAGINATION (9 photos / page) ---------- */
 function setupGalleryPager() {
   const gallery = document.getElementById("gallery");
   const pager = document.getElementById("galleryPager");
@@ -351,7 +377,7 @@ function setupGalleryPager() {
     info.textContent = `${page + 1} / ${pages}`;
     prev.disabled = page === 0;
     next.disabled = page === pages - 1;
-    redrawJourneyCord();   // đổi trang làm thay đổi chiều cao trang → vẽ lại dây
+    redrawJourneyCord();   // changing page changes page height → redraw the cord
   };
 
   prev.addEventListener("click", () => { if (page > 0) { page--; render(); } });
@@ -359,9 +385,9 @@ function setupGalleryPager() {
   render();
 }
 
-/* ---------- 5. LIGHTBOX ẢNH CƯỚI ---------- */
-// Album (anh-cuoi) lướt qua cả bộ ảnh cưới; ảnh ghim hai bên (hành trình)
-// lướt qua 10 ảnh hành trình theo đúng thứ tự timeline.
+/* ---------- 5. PHOTO LIGHTBOX ---------- */
+// Album (anh-cuoi) browses the whole wedding set; the side pins (journey)
+// browse the 10 journey photos in timeline order.
 function setupGalleryLightbox() {
   const lb = document.getElementById("lightbox");
   const lbImg = document.getElementById("lbImg");
@@ -370,17 +396,17 @@ function setupGalleryLightbox() {
   let activeList = PHOTO_LIST;
   let current = 0;
 
-  // dir: 1 = ảnh kế tiếp (trượt từ phải), -1 = ảnh trước (trượt từ trái)
+  // dir: 1 = next photo (slide from right), -1 = previous photo (slide from left)
   const show = (i, dir = 1) => {
     const total = activeList.length;
     if (!total) return;
     current = (i + total) % total;
     lbImg.src = activeList[current];
     lbImg.alt = (activeList === JOURNEY_LIST ? "Hành trình " : "Ảnh cưới ") + (current + 1);
-    // chạy lại hiệu ứng trượt mỗi lần đổi ảnh
+    // restart the slide animation each time the photo changes
     lbImg.style.setProperty("--lb-from", (dir >= 0 ? 28 : -28) + "px");
     lbImg.style.animation = "none";
-    void lbImg.offsetWidth;           // ép reflow để restart animation
+    void lbImg.offsetWidth;           // force reflow to restart the animation
     lbImg.style.animation = "";
   };
   const open = (imgEl) => {
@@ -394,8 +420,8 @@ function setupGalleryLightbox() {
   };
   const close = () => { lb.classList.remove("is-open"); lb.setAttribute("aria-hidden", "true"); };
 
-  // Event delegation: chỉ ảnh Album mới mở phóng to; ảnh hành trình (ghim
-  // hai bên) đã tắt tính năng click-zoom theo yêu cầu.
+  // Event delegation: only Album photos open the zoom; journey photos (side
+  // pins) have click-zoom disabled as requested.
   document.addEventListener("click", (e) => {
     const im = e.target.closest("img.js-photo");
     if (im && im.dataset.group !== "journey") { open(im); return; }
@@ -425,7 +451,7 @@ function setupNav() {
   onScroll();
   window.addEventListener("scroll", onScroll, { passive: true });
 
-  // Menu thu gọn (hamburger) cho mobile
+  // Collapsed (hamburger) menu for mobile
   const toggle = document.getElementById("navToggle");
   const links = document.getElementById("navLinks");
   if (!toggle || !links) return;
@@ -435,11 +461,11 @@ function setupNav() {
     toggle.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
   };
   toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
-  // chạm vào 1 mục thì đóng menu lại
+  // tapping an item closes the menu
   links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
 }
 
-/* ---------- 5b. MỞ PHONG BAO (MODAL QR) ---------- */
+/* ---------- 5b. OPEN GIFT ENVELOPE (QR MODAL) ---------- */
 function setupGiftEnvelope() {
   const envelope = document.getElementById("giftEnvelope");
   const modal = document.getElementById("giftModal");
@@ -457,7 +483,7 @@ function setupGiftEnvelope() {
   });
 }
 
-/* ---------- 6. SAO CHÉP SỐ TÀI KHOẢN ---------- */
+/* ---------- 6. COPY ACCOUNT NUMBER ---------- */
 function setupCopyButtons() {
   document.querySelectorAll(".gift__copy").forEach(btn => {
     btn.addEventListener("click", async () => {
@@ -483,7 +509,7 @@ function toast(msg) {
   toast._t = setTimeout(() => t.classList.remove("is-show"), 2200);
 }
 
-/* ---------- 7. HIỆU ỨNG XUẤT HIỆN KHI CUỘN ---------- */
+/* ---------- 7. REVEAL-ON-SCROLL EFFECT ---------- */
 function setupReveal() {
   const els = document.querySelectorAll(".reveal");
   if (!("IntersectionObserver" in window)) {
