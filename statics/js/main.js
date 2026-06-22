@@ -395,19 +395,46 @@ function setupGalleryLightbox() {
 
   let activeList = PHOTO_LIST;
   let current = 0;
+  let loadToken = 0;   // guards against fast prev/next races
 
   // dir: 1 = next photo (slide from right), -1 = previous photo (slide from left)
   const show = (i, dir = 1) => {
     const total = activeList.length;
     if (!total) return;
     current = (i + total) % total;
-    lbImg.src = activeList[current];
-    lbImg.alt = (activeList === JOURNEY_LIST ? "Hành trình " : "Ảnh cưới ") + (current + 1);
-    // restart the slide animation each time the photo changes
-    lbImg.style.setProperty("--lb-from", (dir >= 0 ? 28 : -28) + "px");
-    lbImg.style.animation = "none";
-    void lbImg.offsetWidth;           // force reflow to restart the animation
-    lbImg.style.animation = "";
+    const src = activeList[current];
+    const alt = (activeList === JOURNEY_LIST ? "Hành trình " : "Ảnh cưới ") + (current + 1);
+    const myToken = ++loadToken;
+
+    // Swap + animate ONLY after the new photo is decoded. Otherwise the <img>
+    // keeps painting the PREVIOUS photo while the new one loads, so the slide
+    // animation runs on the old image and looks like a duplicate frame.
+    const swap = () => {
+      if (myToken !== loadToken) return;   // a newer navigation superseded this one
+      lbImg.src = src;
+      lbImg.alt = alt;
+      lbImg.style.setProperty("--lb-from", (dir >= 0 ? 28 : -28) + "px");
+      lbImg.style.animation = "none";
+      void lbImg.offsetWidth;           // force reflow to restart the animation
+      lbImg.style.animation = "";
+      preload(current + 1);             // warm the likely next photo
+      preload(current - 1);
+    };
+    const pre = new Image();
+    pre.src = src;
+    if (pre.decode) pre.decode().then(swap, swap);
+    else { pre.onload = swap; pre.onerror = swap; }
+  };
+
+  // Keep neighbours warm so subsequent navigation is instant.
+  const preloadCache = [];
+  const preload = (i) => {
+    const total = activeList.length;
+    if (!total) return;
+    const im = new Image();
+    im.src = activeList[(i + total) % total];
+    preloadCache.push(im);
+    if (preloadCache.length > 8) preloadCache.shift();
   };
   const open = (imgEl) => {
     activeList = imgEl.dataset.group === "journey" ? JOURNEY_LIST : PHOTO_LIST;
