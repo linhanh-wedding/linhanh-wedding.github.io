@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupNav();
   renderPhotos();
   setupGalleryPager();
+  setupJourneyCord();
   renderHeroDate();
   renderCalendar();
   startCountdown();
@@ -93,27 +94,98 @@ function renderPhotos() {
       const { tops, rots } = RAILS[side];
       const n = Math.min(photos.length, tops.length);
 
-      // sợi dây nối các điểm treo (uốn lượn nhẹ giữa các ảnh)
-      let d = `M 50 ${tops[0]}`;
-      for (let i = 1; i < n; i++) {
-        const bow = 50 + (i % 2 ? 17 : -17);
-        const my = (tops[i - 1] + tops[i]) / 2;
-        d += ` Q ${bow} ${my} 50 ${tops[i]}`;
-      }
-      const cord = `<svg class="pin-cord" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="${d}"/></svg>`;
-
       let figs = "";
       for (let i = 0; i < n; i++) {
-        const num = JOURNEY.indexOf(photos[i]) + 1;
-        figs += `<figure class="pin" style="--rot:${rots[i]}deg; --dur:${durs[di % durs.length]}s; --delay:${delays[di % delays.length]}s; top:${tops[i]}%">` +
+        const num = JOURNEY.indexOf(photos[i]) + 1;   // số thứ tự timeline 1..10
+        figs += `<figure class="pin" data-seq="${num}" style="--rot:${rots[i]}deg; --dur:${durs[di % durs.length]}s; --delay:${delays[di % delays.length]}s; top:${tops[i]}%">` +
                 `<img class="js-photo" data-group="journey" loading="lazy" src="${JOURNEY_DIR}${photos[i]}" alt="Hành trình ${num}" /></figure>`;
         di++;
       }
-      return `<div class="pin-rail pin-rail--${side}">${cord}${figs}</div>`;
+      return `<div class="pin-rail pin-rail--${side}">${figs}</div>`;
     };
 
     pins.innerHTML = buildRail("l", leftJ) + buildRail("r", rightJ);
   }
+}
+
+/* ---------- 4c. SỢI DÂY HÀNH TRÌNH (nối 01→10, trái↔phải liên tiếp) ---------- */
+// Vẽ một sợi dây duy nhất đi qua 10 ảnh theo đúng thứ tự timeline. Đoạn vắt
+// qua giữa nằm SAU cột nội dung (z-index thấp hơn .invite) nên không đè lên
+// phần trung tâm — chỉ hiện ở khoảng trống hai bên.
+function setupJourneyCord() {
+  const pins = document.getElementById("photoPins");
+  if (!pins) return;
+  window.addEventListener("load", redrawJourneyCord);
+  let t;
+  window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(redrawJourneyCord, 150); });
+  redrawJourneyCord();
+}
+
+function redrawJourneyCord() {
+  const pins = document.getElementById("photoPins");
+  if (!pins) return;
+
+  let svg = pins.querySelector("#journeyCord");
+  if (getComputedStyle(pins).display === "none") { if (svg) svg.remove(); return; }
+
+  const figs = Array.from(pins.querySelectorAll(".pin"))
+    .sort((a, b) => (+a.dataset.seq) - (+b.dataset.seq));
+  if (figs.length < 2) return;
+
+  // điểm neo = nút thắt (giữa, sát mép trên) của từng ảnh, tính theo px
+  const knots = figs.map((f) => {
+    const rail = f.parentElement;
+    return {
+      x: rail.offsetLeft + f.offsetLeft + f.offsetWidth / 2,
+      y: rail.offsetTop + f.offsetTop + 4
+    };
+  });
+
+  // điểm ghim bắt đầu: phía trên ảnh 01, sợi dây buông xuống từ đây
+  const start = { x: knots[0].x, y: Math.max(6, knots[0].y - 70) };
+  const pts = [start, ...knots];
+
+  // đường cong Catmull–Rom (mềm mại, lượn qua đúng các điểm neo)
+  const f = (v) => v.toFixed(1);
+  const T = 0.22;   // độ "mềm" của đường cong — lớn hơn = cong mượt hơn
+  let d = `M ${f(pts[0].x)} ${f(pts[0].y)}`;
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[i - 1] || pts[i];
+    const p1 = pts[i];
+    const p2 = pts[i + 1];
+    const p3 = pts[i + 2] || pts[i + 1];
+    const c1x = p1.x + (p2.x - p0.x) * T;
+    const c1y = p1.y + (p2.y - p0.y) * T;
+    const c2x = p2.x - (p3.x - p1.x) * T;
+    const c2y = p2.y - (p3.y - p1.y) * T;
+    d += ` C ${f(c1x)} ${f(c1y)} ${f(c2x)} ${f(c2y)} ${f(p2.x)} ${f(p2.y)}`;
+  }
+
+  const NS = "http://www.w3.org/2000/svg";
+  if (!svg) {
+    svg = document.createElementNS(NS, "svg");
+    svg.id = "journeyCord";
+    svg.setAttribute("class", "journey-cord");
+    svg.setAttribute("preserveAspectRatio", "none");
+    svg.appendChild(document.createElementNS(NS, "path"));
+    // ghim đầu dây: vòng ngoài + đầu ghim + điểm sáng
+    ["cord-pin__ring", "cord-pin__head", "cord-pin__shine"].forEach((cls) => {
+      const c = document.createElementNS(NS, "circle");
+      c.setAttribute("class", cls);
+      svg.appendChild(c);
+    });
+    pins.insertBefore(svg, pins.firstChild);   // sau ảnh (z-index thấp hơn)
+  }
+  svg.setAttribute("viewBox", `0 0 ${pins.offsetWidth} ${pins.offsetHeight}`);
+  svg.querySelector("path").setAttribute("d", d);
+
+  const setCircle = (sel, cx, cy, r) => {
+    const c = svg.querySelector(sel);
+    c.setAttribute("cx", f(cx)); c.setAttribute("cy", f(cy)); c.setAttribute("r", r);
+  };
+  setCircle(".cord-pin__ring", start.x, start.y, 9);
+  setCircle(".cord-pin__head", start.x, start.y, 6);
+  setCircle(".cord-pin__shine", start.x - 2, start.y - 2.4, 1.8);
 }
 
 /* ---------- Ngày tháng tiện ích ---------- */
@@ -279,6 +351,7 @@ function setupGalleryPager() {
     info.textContent = `${page + 1} / ${pages}`;
     prev.disabled = page === 0;
     next.disabled = page === pages - 1;
+    redrawJourneyCord();   // đổi trang làm thay đổi chiều cao trang → vẽ lại dây
   };
 
   prev.addEventListener("click", () => { if (page > 0) { page--; render(); } });
@@ -321,12 +394,12 @@ function setupGalleryLightbox() {
   };
   const close = () => { lb.classList.remove("is-open"); lb.setAttribute("aria-hidden", "true"); };
 
-  // Event delegation toàn trang: bấm vào ảnh — hoặc vào khung/nút thắt
-  // bao quanh ảnh (khung trắng, nút thắt của ảnh ghim) — đều mở phóng to.
+  // Event delegation: chỉ ảnh Album mới mở phóng to; ảnh hành trình (ghim
+  // hai bên) đã tắt tính năng click-zoom theo yêu cầu.
   document.addEventListener("click", (e) => {
     const im = e.target.closest("img.js-photo");
-    if (im) { open(im); return; }
-    const tile = e.target.closest(".pin, .gallery__item");
+    if (im && im.dataset.group !== "journey") { open(im); return; }
+    const tile = e.target.closest(".gallery__item");
     if (tile) {
       const img = tile.querySelector("img.js-photo");
       if (img) open(img);

@@ -146,20 +146,26 @@ img { display: block; max-width: 100%; }
 .pin-rail--l { right: calc(50% + 396px); }
 .pin-rail--r { left:  calc(50% + 396px); }
 
-/* sợi dây nối các ảnh chạy dọc theo từng bên (không đè lên phần trung tâm) */
-.pin-cord {
-  position: absolute; inset: 0;
+/* sợi dây hành trình: nối 01→10 trái↔phải liên tiếp; đoạn vắt qua giữa nằm
+   sau cột nội dung (z-index thấp hơn .invite) nên không đè lên trung tâm */
+.journey-cord {
+  position: absolute; top: 0; left: 0;
   width: 100%; height: 100%;
   overflow: visible;
   z-index: 0;
+  pointer-events: none;
 }
-.pin-cord path {
+.journey-cord path {
   fill: none;
-  stroke: rgba(180,140,60,.9);
-  stroke-width: 1.6;
+  stroke: rgba(180,140,60,.92);
+  stroke-width: 2;
   stroke-linecap: round;
   vector-effect: non-scaling-stroke;
 }
+/* ghim cố định đầu sợi dây (phía trên ảnh 01) */
+.journey-cord .cord-pin__ring  { fill: rgba(110,16,35,.18); }
+.journey-cord .cord-pin__head  { fill: var(--gold); stroke: var(--maroon-dark); stroke-width: 1.5; vector-effect: non-scaling-stroke; }
+.journey-cord .cord-pin__shine { fill: rgba(255,255,255,.85); }
 
 .pin {
   --rot: 0deg;
@@ -173,7 +179,7 @@ img { display: block; max-width: 100%; }
   border-radius: 4px;
   box-shadow: 0 18px 38px -14px rgba(78,12,24,.5);
   pointer-events: auto;
-  cursor: pointer;
+  cursor: default;
   z-index: 1;
   transform: rotate(var(--rot));
   transition: box-shadow .4s ease;
@@ -823,11 +829,13 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 @keyframes scrollDot { 0% { opacity: 0; top: 7px; } 50% { opacity: 1; } 100% { opacity: 0; top: 22px; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes envFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
-/* ảnh cưới trôi nổi nhẹ nhàng (giữ nguyên độ nghiêng --rot của từng ảnh) */
+/* ảnh trôi nổi + đung đưa (lắc) quanh độ nghiêng --rot của từng ảnh */
 @keyframes pinFloat {
-  0%   { transform: translateY(0)    rotate(var(--rot)); }
-  50%  { transform: translateY(-9px) rotate(calc(var(--rot) + 1deg)); }
-  100% { transform: translateY(0)    rotate(var(--rot)); }
+  0%   { transform: translateY(0)     rotate(var(--rot)); }
+  25%  { transform: translateY(-8px)  rotate(calc(var(--rot) + 2.6deg)); }
+  50%  { transform: translateY(-15px) rotate(var(--rot)); }
+  75%  { transform: translateY(-8px)  rotate(calc(var(--rot) - 2.6deg)); }
+  100% { transform: translateY(0)     rotate(var(--rot)); }
 }
 @keyframes lbSlide {
   from { opacity: 0; transform: translateX(var(--lb-from, 28px)) scale(.97); }
