@@ -28,10 +28,30 @@
     <span class="music-toggle__icon">&#9835;</span>
   </button>
 
+  <!-- ============ NAVIGATION (cố định trên cùng — cả mobile & desktop) ============ -->
+  <nav class="nav" id="nav" aria-label="Điều hướng">
+    <div class="nav__inner">
+      <a class="nav__brand" href="#home">HL <span>&amp;</span> NA</a>
+      <button class="nav__toggle" id="navToggle" type="button" aria-label="Mở menu" aria-expanded="false" aria-controls="navLinks">
+        <span></span><span></span><span></span>
+      </button>
+      <ul class="nav__links" id="navLinks">
+        <li><a href="#le-cuoi">Lễ Cưới</a></li>
+        <li><a href="#tiec-cuoi">Tiệc Cưới</a></li>
+        <li><a href="#chi-duong">Chỉ Đường</a></li>
+        <li><a href="#lich-trinh">Lịch Trình</a></li>
+        <li><a href="#mung-cuoi">Mừng Cưới</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ============ ẢNH CƯỚI GHIM HAI BÊN (chỉ hiện trên desktop — đổ ngẫu nhiên qua JS) ============ -->
+  <div class="photo-pins" id="photoPins" aria-hidden="true"></div>
+
   <main class="invite">
 
     <!-- ============ 1. HEADER / HERO ============ -->
-    <header class="hero reveal">
+    <header class="hero reveal" id="home">
       <div class="hero__media">
         <img src="statics/images/header.jpg" alt="Ảnh cưới Hồng Lĩnh và Ngọc Ánh" />
         <div class="hero__overlay"></div>
@@ -50,7 +70,7 @@
     </header>
 
     <!-- ============ 2. THÔNG TIN LỄ CƯỚI ============ -->
-    <section class="section reveal">
+    <section class="section reveal" id="le-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Lễ Cưới<span class="band__deco">&#10070;</span></div>
       <div class="families">
         <div class="family">
@@ -69,31 +89,26 @@
       </div>
 
       <div class="couple-names">
-        <p class="couple-names__pre">Trân trọng báo tin lễ thành hôn của hai con</p>
+        <p class="couple-names__pre">Trân trọng báo tin lễ thành hôn của</p>
         <h2 class="couple-names__name">Hồng Lĩnh</h2>
         <span class="couple-names__amp">&amp;</span>
         <h2 class="couple-names__name">Ngọc Ánh</h2>
       </div>
     </section>
 
-    <!-- ============ 3. ALBUM ẢNH CƯỚI ============ -->
-    <section class="section reveal">
+    <!-- ============ 3. ALBUM ẢNH CƯỚI (ẩn trên desktop — đã ghim ảnh hai bên) ============ -->
+    <section class="section reveal" id="album">
       <div class="band"><span class="band__deco">&#10070;</span>Album Ảnh Cưới<span class="band__deco">&#10070;</span></div>
-      <div class="gallery" id="gallery">
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-2.jpg" alt="Ảnh cưới 2" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-3.jpg" alt="Ảnh cưới 3" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-4.jpg" alt="Ảnh cưới 4" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-5.jpg" alt="Ảnh cưới 5" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-6.jpg" alt="Ảnh cưới 6" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-7.jpg" alt="Ảnh cưới 7" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-8.jpg" alt="Ảnh cưới 8" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-9.jpg" alt="Ảnh cưới 9" /></figure>
-        <figure class="gallery__item"><img loading="lazy" src="statics/images/anh-cuoi-10.jpg" alt="Ảnh cưới 10" /></figure>
+      <div class="gallery" id="gallery"></div>
+      <div class="gallery__pager" id="galleryPager" hidden>
+        <button class="gallery__pgbtn" id="galPrev" type="button" aria-label="Trang trước">&#8249;</button>
+        <span class="gallery__pginfo" id="galInfo">1 / 1</span>
+        <button class="gallery__pgbtn" id="galNext" type="button" aria-label="Trang sau">&#8250;</button>
       </div>
     </section>
 
     <!-- ============ 4. THÔNG TIN TIỆC CƯỚI + LỊCH ============ -->
-    <section class="section reveal">
+    <section class="section reveal" id="tiec-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Thông Tin Tiệc Cưới<span class="band__deco">&#10070;</span></div>
 
       <p class="section__lead">Trân trọng kính mời tới dự bữa tiệc chung vui cùng gia đình chúng tôi</p>
@@ -132,7 +147,7 @@
     </section>
 
     <!-- ============ 5. BẢN ĐỒ ============ -->
-    <section class="section reveal">
+    <section class="section reveal" id="chi-duong">
       <div class="band"><span class="band__deco">&#10070;</span>Chỉ Đường Đến Tiệc Cưới<span class="band__deco">&#10070;</span></div>
       <div class="map">
         <iframe
@@ -147,7 +162,7 @@
     </section>
 
     <!-- ============ 6. LỊCH TRÌNH CƯỚI ============ -->
-    <section class="section reveal">
+    <section class="section reveal" id="lich-trinh">
       <div class="band"><span class="band__deco">&#10070;</span>Lịch Trình Cưới<span class="band__deco">&#10070;</span></div>
       <div class="timeline">
         <div class="timeline__item">
@@ -194,7 +209,7 @@
     </section>
 
     <!-- ============ 7. PHONG BAO MỪNG CƯỚI ============ -->
-    <section class="section reveal">
+    <section class="section reveal" id="mung-cuoi">
       <div class="band"><span class="band__deco">&#10070;</span>Phong Bao Mừng Cưới<span class="band__deco">&#10070;</span></div>
       <p class="section__lead">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi. Và nếu muốn trao thêm chút tấm lòng mừng cưới, cô dâu chú rể rất sẵn lòng đón nhận qua phiên bản "phong bao QR 4.0" bên dưới nha.</p>
 

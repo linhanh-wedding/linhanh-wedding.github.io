@@ -37,6 +37,7 @@ body {
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='%23c8a24a' fill-opacity='0.05'%3E%3Cpath d='M30 0l6 18 18 0-14.5 11 5.5 18-15-11-15 11 5.5-18L6 18l18 0z'/%3E%3C/g%3E%3C/svg%3E");
   line-height: 1.6;
   overflow-x: hidden;
+  position: relative;   /* mốc cho ảnh ghim hai bên (.photo-pins) */
 }
 
 img { display: block; max-width: 100%; }
@@ -49,10 +50,164 @@ img { display: block; max-width: 100%; }
   box-shadow: 0 0 60px -20px rgba(78, 12, 24, .4);
   position: relative;
   overflow: hidden;
+  z-index: 1;            /* nằm trên lớp ảnh ghim hai bên */
+}
+
+/* ===================== NAVIGATION BAR ===================== */
+/* Mobile-first: thanh cố định trên cùng, các mục thu trong menu hamburger */
+.nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 70;
+  background: linear-gradient(180deg, var(--maroon), var(--maroon-dark));
+  box-shadow: 0 5px 18px -10px rgba(0,0,0,.55);
+  transition: box-shadow .35s ease;
+}
+.nav__inner {
+  position: relative;
+  max-width: 1180px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 13px 20px;
+  transition: padding .35s ease;
+}
+.nav__brand {
+  font-family: var(--serif);
+  color: #fff;
+  font-size: 1.2rem;
+  letter-spacing: .1em;
+  text-decoration: none;
+  text-shadow: 0 2px 10px rgba(0,0,0,.6);
+}
+.nav__brand span { color: var(--gold-light); font-family: var(--script); }
+
+/* nút hamburger */
+.nav__toggle {
+  display: flex; flex-direction: column; justify-content: center; gap: 5px;
+  width: 40px; height: 36px; padding: 8px;
+  background: none; border: none; cursor: pointer;
+}
+.nav__toggle span {
+  display: block; width: 100%; height: 2px; border-radius: 2px;
+  background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.5);
+  transition: transform .3s ease, opacity .3s ease;
+}
+.nav.is-open .nav__toggle span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.nav.is-open .nav__toggle span:nth-child(2) { opacity: 0; }
+.nav.is-open .nav__toggle span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+/* menu thả xuống (mobile) */
+.nav__links {
+  list-style: none;
+  position: absolute;
+  top: 100%; left: 0; right: 0;
+  display: flex; flex-direction: column;
+  background: linear-gradient(180deg, var(--maroon), var(--maroon-dark));
+  box-shadow: 0 16px 30px -12px rgba(0,0,0,.6);
+  max-height: 0; overflow: hidden; opacity: 0;
+  transition: max-height .38s ease, opacity .3s ease;
+}
+.nav.is-open .nav__links { max-height: 360px; opacity: 1; }
+.nav__links li + li { border-top: 1px solid rgba(230,207,142,.16); }
+.nav__links a {
+  display: block;
+  padding: 14px 24px;
+  color: #fff;
+  text-decoration: none;
+  font-size: .92rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  transition: color .25s ease, background .25s ease;
+}
+.nav__links a:hover { color: var(--gold-light); background: rgba(255,255,255,.05); }
+
+.nav.is-scrolled {
+  box-shadow: 0 8px 26px -10px rgba(0,0,0,.65);
+}
+.nav.is-scrolled .nav__inner { padding-top: 10px; padding-bottom: 10px; }
+
+/* ===================== ẢNH CƯỚI GHIM HAI BÊN ===================== */
+.photo-pins {
+  position: absolute;
+  inset: 0;
+  z-index: 0;            /* sau nội dung thiệp, hiện ở khoảng trống hai bên */
+  pointer-events: none;  /* chỉ các ảnh ghim mới bắt sự kiện */
+  display: none;         /* chỉ hiện trên desktop rộng */
+}
+/* mỗi bên là một "giá treo" nằm trong khoảng trống, cách mép cột nội dung
+   (nửa cột = 360px) một quãng thoáng để ảnh không sát trung tâm */
+.pin-rail {
+  position: absolute;
+  top: 0; bottom: 0;
+  width: clamp(190px, 16vw, 250px);
+}
+.pin-rail--l { right: calc(50% + 396px); }
+.pin-rail--r { left:  calc(50% + 396px); }
+
+/* sợi dây nối các ảnh chạy dọc theo từng bên (không đè lên phần trung tâm) */
+.pin-cord {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  overflow: visible;
+  z-index: 0;
+}
+.pin-cord path {
+  fill: none;
+  stroke: rgba(180,140,60,.9);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  vector-effect: non-scaling-stroke;
+}
+
+.pin {
+  --rot: 0deg;
+  --dur: 7s;
+  --delay: 0s;
+  position: absolute;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  padding: 10px 10px 14px;
+  border-radius: 4px;
+  box-shadow: 0 18px 38px -14px rgba(78,12,24,.5);
+  pointer-events: auto;
+  cursor: pointer;
+  z-index: 1;
+  transform: rotate(var(--rot));
+  transition: box-shadow .4s ease;
+  animation: pinFloat var(--dur) ease-in-out var(--delay) infinite;
+}
+.pin img {
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-radius: 2px;
+  display: block;
+}
+/* nút thắt vàng nơi ảnh "treo" vào sợi dây */
+.pin::before {
+  content: "";
+  position: absolute;
+  top: -6px; left: 50%;
+  width: 11px; height: 11px;
+  border-radius: 50%;
+  transform: translateX(-50%);
+  background: radial-gradient(circle at 40% 35%, var(--gold-light), var(--gold));
+  box-shadow: 0 1px 3px rgba(0,0,0,.4);
+  z-index: 2;
+}
+.pin:hover {
+  animation: none;                 /* dừng trôi để phóng ảnh khi rê chuột */
+  transform: rotate(0deg) scale(1.07);
+  box-shadow: 0 28px 52px -16px rgba(78,12,24,.6);
+  z-index: 6;
 }
 
 /* ===================== SECTION & BAND ===================== */
 .section { padding: 46px 26px 50px; }
+.section, .hero { scroll-margin-top: 76px; }   /* chừa chỗ cho nav cố định */
 
 .section__lead {
   text-align: center;
@@ -156,7 +311,7 @@ img { display: block; max-width: 100%; }
   justify-content: flex-start;
   text-align: center;
   color: #fff;
-  padding: 34px 24px 64px;
+  padding: 96px 24px 64px;   /* chừa khoảng trên cho thanh nav cố định */
   overflow: hidden;
 }
 .hero__media { position: absolute; inset: 0; z-index: 0; }
@@ -287,6 +442,27 @@ img { display: block; max-width: 100%; }
 }
 .gallery__item:hover img { transform: scale(1.08); }
 .gallery__item:hover::after { opacity: 1; background: rgba(110,16,35,.25); }
+
+/* phân trang album: mỗi trang 9 ảnh, bấm nút để xem thêm */
+.gallery__pager {
+  display: flex; align-items: center; justify-content: center;
+  gap: 18px; margin-top: 18px;
+}
+.gallery__pgbtn {
+  width: 40px; height: 40px; border-radius: 50%;
+  border: 1px solid rgba(230,207,142,.5);
+  background: linear-gradient(180deg, var(--red), var(--maroon));
+  color: var(--gold-light); font-size: 1.3rem; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 8px 18px -10px rgba(78,12,24,.5);
+  transition: transform .25s ease, opacity .25s ease;
+}
+.gallery__pgbtn:hover { transform: translateY(-2px); }
+.gallery__pgbtn:disabled { opacity: .35; cursor: default; transform: none; }
+.gallery__pginfo {
+  font-family: var(--serif); color: var(--maroon);
+  letter-spacing: .08em; font-size: .95rem; min-width: 54px; text-align: center;
+}
 
 /* ===================== COUNTDOWN ===================== */
 .countdown {
@@ -605,7 +781,11 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 }
 .lightbox.is-open { opacity: 1; visibility: visible; }
 .lightbox__img {
-  max-width: 90vw; max-height: 84vh;
+  /* ảnh gốc cao ~684px → phóng to gấp ~1.5 lần (~1040px), giới hạn theo màn hình */
+  width: auto;
+  height: min(1040px, 90vh);
+  max-width: 94vw;
+  object-fit: contain;
   border-radius: 8px; box-shadow: 0 20px 50px -10px rgba(0,0,0,.7);
   border: 3px solid rgba(230,207,142,.4);
   animation: lbSlide .35s ease;
@@ -643,6 +823,12 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 @keyframes scrollDot { 0% { opacity: 0; top: 7px; } 50% { opacity: 1; } 100% { opacity: 0; top: 22px; } }
 @keyframes spin { to { transform: rotate(360deg); } }
 @keyframes envFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+/* ảnh cưới trôi nổi nhẹ nhàng (giữ nguyên độ nghiêng --rot của từng ảnh) */
+@keyframes pinFloat {
+  0%   { transform: translateY(0)    rotate(var(--rot)); }
+  50%  { transform: translateY(-9px) rotate(calc(var(--rot) + 1deg)); }
+  100% { transform: translateY(0)    rotate(var(--rot)); }
+}
 @keyframes lbSlide {
   from { opacity: 0; transform: translateX(var(--lb-from, 28px)) scale(.97); }
   to   { opacity: 1; transform: translateX(0) scale(1); }
@@ -650,6 +836,58 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 @keyframes musicPulse {
   0%, 100% { box-shadow: 0 10px 24px -10px rgba(0,0,0,.5), 0 0 0 0 rgba(230,207,142,.55); }
   50%      { box-shadow: 0 10px 24px -10px rgba(0,0,0,.5), 0 0 0 10px rgba(230,207,142,0); }
+}
+
+/* ===================== DESKTOP (web) ===================== */
+/* Từ tablet ngang trở lên: bỏ hamburger, trải các mục ngang trên thanh nav */
+@media (min-width: 900px) {
+  .nav__toggle { display: none; }
+  .nav__links {
+    position: static;
+    flex-direction: row;
+    gap: 30px;
+    background: none;
+    box-shadow: none;
+    max-height: none; overflow: visible; opacity: 1;
+  }
+  .nav__links li + li { border-top: none; }
+  .nav__links a {
+    position: relative;
+    padding: 0;
+    font-size: .9rem;
+    letter-spacing: .05em;
+    text-shadow: 0 2px 10px rgba(0,0,0,.55);
+  }
+  .nav__links a:hover { background: none; }
+  .nav__links a::after {
+    content: "";
+    position: absolute; left: 0; right: 0; bottom: -6px;
+    height: 2px; background: var(--gold-light);
+    transform: scaleX(0); transform-origin: center;
+    transition: transform .28s ease;
+  }
+  .nav__links a:hover::after { transform: scaleX(1); }
+  .nav__inner { padding: 16px 34px; }
+}
+
+/* Màn rộng: nền hai bên sang trọng hơn + ghim ảnh & ẩn mục Album */
+@media (min-width: 1100px) {
+  body {
+    background:
+      radial-gradient(ellipse at 16% 12%, rgba(200,162,74,.22), transparent 42%),
+      radial-gradient(ellipse at 84% 8%,  rgba(230,207,142,.20), transparent 40%),
+      radial-gradient(ellipse at 86% 86%, rgba(142,27,46,.16),  transparent 46%),
+      radial-gradient(ellipse at 12% 84%, rgba(110,16,35,.13),  transparent 48%),
+      linear-gradient(135deg, #f6e9d7 0%, #efddc9 46%, #f4e7d0 100%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='90'%3E%3Cg fill='none' stroke='%23c8a24a' stroke-opacity='0.10'%3E%3Ccircle cx='45' cy='45' r='3.5'/%3E%3Cpath d='M45 16c6.5 13 13 19.5 26 26-13 6.5-19.5 13-26 26-6.5-13-13-19.5-26-26 13-6.5 19.5-13 26-26z'/%3E%3C/g%3E%3C/svg%3E");
+    background-attachment: fixed;
+  }
+  .invite {
+    box-shadow: 0 0 0 1px rgba(200,162,74,.22), 0 36px 90px -34px rgba(78,12,24,.5);
+  }
+}
+@media (min-width: 1240px) {
+  .photo-pins { display: block; }
 }
 
 /* ===================== RESPONSIVE ===================== */

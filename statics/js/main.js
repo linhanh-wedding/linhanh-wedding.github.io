@@ -12,8 +12,37 @@ const WEDDING_CONFIG = {
   lunar: ""              // ví dụ: "Tức ngày 13 tháng 10 năm Bính Ngọ"
 };
 
+/* ⚠️  DANH SÁCH ẢNH CƯỚI  ⚠️
+   Tất cả ảnh nằm trong thư mục statics/images/anh-cuoi/.
+   Thêm/bớt ảnh thì chỉ cần sửa danh sách tên file dưới đây.
+   Ảnh sẽ được hiển thị theo THỨ TỰ NGẪU NHIÊN mỗi lần tải trang. */
+const PHOTO_DIR = "statics/images/anh-cuoi/";
+// thứ tự ngẫu nhiên của TẤT CẢ ảnh (dùng chung cho lightbox để lướt đủ bộ)
+let PHOTO_LIST = [];
+const PHOTOS = [
+  "anh-cuoi-1.jpg",  "anh-cuoi-2.jpg",  "anh-cuoi-3.jpg",  "anh-cuoi-4.jpg",
+  "anh-cuoi-5.jpg",  "anh-cuoi-6.jpg",  "anh-cuoi-7.jpg",  "anh-cuoi-8.jpg",
+  "anh-cuoi-9.jpg",  "anh-cuoi-10.jpg", "anh-cuoi-11.jpg", "anh-cuoi-12.jpg",
+  "anh-cuoi-13.jpg", "anh-cuoi-14.jpg", "anh-cuoi-15.jpg", "anh-cuoi-16.jpg",
+  "anh-cuoi-17.jpg", "anh-cuoi-18.jpg", "anh-cuoi-19.jpg", "anh-cuoi-20.jpg",
+  "anh-cuoi-21.jpg"
+];
+
+/* 🌿 HÀNH TRÌNH — 10 ảnh ghim hai bên (bản web), theo thứ tự timeline 01→10.
+   Lẻ (01,03,05,07,09) bên trái · Chẵn (02,04,06,08,10) bên phải. */
+const JOURNEY_DIR = "statics/images/hanh-trinh/";
+const JOURNEY = [
+  "hanhtrinh-01.jpg", "hanhtrinh-02.jpg", "hanhtrinh-03.jpg", "hanhtrinh-04.jpg",
+  "hanhtrinh-05.jpg", "hanhtrinh-06.jpg", "hanhtrinh-07.jpg", "hanhtrinh-08.jpg",
+  "hanhtrinh-09.jpg", "hanhtrinh-10.jpg"
+];
+let JOURNEY_LIST = [];   // src đầy đủ theo thứ tự timeline, dùng cho lightbox
+
 document.addEventListener("DOMContentLoaded", () => {
   setupMusic();
+  setupNav();
+  renderPhotos();
+  setupGalleryPager();
   renderHeroDate();
   renderCalendar();
   startCountdown();
@@ -22,6 +51,70 @@ document.addEventListener("DOMContentLoaded", () => {
   setupCopyButtons();
   setupReveal();
 });
+
+/* ---------- ĐỔ ẢNH CƯỚI (NGẪU NHIÊN) VÀO ALBUM & GHIM HAI BÊN ---------- */
+function renderPhotos() {
+  // trộn ngẫu nhiên (Fisher–Yates)
+  const shuffle = (arr) => {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  };
+  const list = shuffle(PHOTOS);
+  PHOTO_LIST = list.map((f) => PHOTO_DIR + f);   // dùng cho lightbox lướt đủ bộ
+
+  const gallery = document.getElementById("gallery");
+  if (gallery) {
+    gallery.innerHTML = list.map((f, i) =>
+      `<figure class="gallery__item"><img class="js-photo" data-group="album" loading="lazy" src="${PHOTO_DIR}${f}" alt="Ảnh cưới ${i + 1}" /></figure>`
+    ).join("");
+  }
+
+  // Ghim hai bên: HÀNH TRÌNH theo timeline (cố định, không ngẫu nhiên).
+  JOURNEY_LIST = JOURNEY.map((f) => JOURNEY_DIR + f);
+  const pins = document.getElementById("photoPins");
+  if (pins) {
+    const RAILS = {
+      l: { tops: [4, 24, 44, 64, 84],  rots: [-6, 4, -4, 5, -4] },
+      r: { tops: [14, 34, 54, 74, 90], rots: [5, -7, 6, -5, 4] }
+    };
+    const durs   = [7.5, 8.2, 6.8, 7.9, 7.2, 8.5, 6.6, 8.0, 7.4, 7.7];
+    const delays = [-0.5, -2.0, -1.2, -3.1, -0.8, -2.6, -1.7, -3.6, -1.0, -2.3];
+
+    // lẻ → trái, chẵn → phải, giữ đúng thứ tự 01..10
+    const leftJ  = JOURNEY.filter((_, i) => i % 2 === 0);  // 01,03,05,07,09
+    const rightJ = JOURNEY.filter((_, i) => i % 2 === 1);  // 02,04,06,08,10
+
+    let di = 0;
+    const buildRail = (side, photos) => {
+      const { tops, rots } = RAILS[side];
+      const n = Math.min(photos.length, tops.length);
+
+      // sợi dây nối các điểm treo (uốn lượn nhẹ giữa các ảnh)
+      let d = `M 50 ${tops[0]}`;
+      for (let i = 1; i < n; i++) {
+        const bow = 50 + (i % 2 ? 17 : -17);
+        const my = (tops[i - 1] + tops[i]) / 2;
+        d += ` Q ${bow} ${my} 50 ${tops[i]}`;
+      }
+      const cord = `<svg class="pin-cord" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><path d="${d}"/></svg>`;
+
+      let figs = "";
+      for (let i = 0; i < n; i++) {
+        const num = JOURNEY.indexOf(photos[i]) + 1;
+        figs += `<figure class="pin" style="--rot:${rots[i]}deg; --dur:${durs[di % durs.length]}s; --delay:${delays[di % delays.length]}s; top:${tops[i]}%">` +
+                `<img class="js-photo" data-group="journey" loading="lazy" src="${JOURNEY_DIR}${photos[i]}" alt="Hành trình ${num}" /></figure>`;
+        di++;
+      }
+      return `<div class="pin-rail pin-rail--${side}">${cord}${figs}</div>`;
+    };
+
+    pins.innerHTML = buildRail("l", leftJ) + buildRail("r", rightJ);
+  }
+}
 
 /* ---------- Ngày tháng tiện ích ---------- */
 function getWeddingDate() {
@@ -161,38 +254,83 @@ function startCountdown() {
   const timer = setInterval(tick, 1000);
 }
 
-/* ---------- 5. LIGHTBOX ALBUM ---------- */
-function setupGalleryLightbox() {
+/* ---------- 4b. PHÂN TRANG ALBUM (9 ảnh / trang) ---------- */
+function setupGalleryPager() {
   const gallery = document.getElementById("gallery");
+  const pager = document.getElementById("galleryPager");
+  if (!gallery || !pager) return;
+
+  const items = Array.from(gallery.children);
+  const PER = 9;
+  const pages = Math.ceil(items.length / PER);
+
+  if (pages <= 1) { pager.hidden = true; return; }
+  pager.hidden = false;
+
+  const prev = document.getElementById("galPrev");
+  const next = document.getElementById("galNext");
+  const info = document.getElementById("galInfo");
+  let page = 0;
+
+  const render = () => {
+    items.forEach((el, i) => {
+      el.style.display = (Math.floor(i / PER) === page) ? "" : "none";
+    });
+    info.textContent = `${page + 1} / ${pages}`;
+    prev.disabled = page === 0;
+    next.disabled = page === pages - 1;
+  };
+
+  prev.addEventListener("click", () => { if (page > 0) { page--; render(); } });
+  next.addEventListener("click", () => { if (page < pages - 1) { page++; render(); } });
+  render();
+}
+
+/* ---------- 5. LIGHTBOX ẢNH CƯỚI ---------- */
+// Album (anh-cuoi) lướt qua cả bộ ảnh cưới; ảnh ghim hai bên (hành trình)
+// lướt qua 10 ảnh hành trình theo đúng thứ tự timeline.
+function setupGalleryLightbox() {
   const lb = document.getElementById("lightbox");
   const lbImg = document.getElementById("lbImg");
-  if (!gallery || !lb) return;
+  if (!lb || !lbImg) return;
 
-  const imgs = Array.from(gallery.querySelectorAll("img"));
+  let activeList = PHOTO_LIST;
   let current = 0;
 
   // dir: 1 = ảnh kế tiếp (trượt từ phải), -1 = ảnh trước (trượt từ trái)
   const show = (i, dir = 1) => {
-    current = (i + imgs.length) % imgs.length;
-    lbImg.src = imgs[current].src;
-    lbImg.alt = imgs[current].alt;
+    const total = activeList.length;
+    if (!total) return;
+    current = (i + total) % total;
+    lbImg.src = activeList[current];
+    lbImg.alt = (activeList === JOURNEY_LIST ? "Hành trình " : "Ảnh cưới ") + (current + 1);
     // chạy lại hiệu ứng trượt mỗi lần đổi ảnh
     lbImg.style.setProperty("--lb-from", (dir >= 0 ? 28 : -28) + "px");
     lbImg.style.animation = "none";
     void lbImg.offsetWidth;           // ép reflow để restart animation
     lbImg.style.animation = "";
   };
-  const open = (i) => { show(i, 1); lb.classList.add("is-open"); lb.setAttribute("aria-hidden", "false"); };
+  const open = (imgEl) => {
+    activeList = imgEl.dataset.group === "journey" ? JOURNEY_LIST : PHOTO_LIST;
+    const src = imgEl.getAttribute("src");
+    const i = activeList.indexOf(src);
+    if (i < 0) return;
+    show(i, 1);
+    lb.classList.add("is-open");
+    lb.setAttribute("aria-hidden", "false");
+  };
   const close = () => { lb.classList.remove("is-open"); lb.setAttribute("aria-hidden", "true"); };
 
-  // Dùng event delegation trên cả khung gallery: click ở đâu trong 1 ảnh
-  // cũng mở được, kể cả khi lớp phủ kính lúp che mất thẻ <img>.
-  gallery.addEventListener("click", (e) => {
-    const item = e.target.closest(".gallery__item");
-    if (!item || !gallery.contains(item)) return;
-    const img = item.querySelector("img");
-    const i = imgs.indexOf(img);
-    if (i >= 0) open(i);
+  // Event delegation toàn trang: bấm vào ảnh — hoặc vào khung/nút thắt
+  // bao quanh ảnh (khung trắng, nút thắt của ảnh ghim) — đều mở phóng to.
+  document.addEventListener("click", (e) => {
+    const im = e.target.closest("img.js-photo");
+    if (im) { open(im); return; }
+    const tile = e.target.closest(".pin, .gallery__item");
+    if (tile) {
+      const img = tile.querySelector("img.js-photo");
+      if (img) open(img);
+    }
   });
   document.getElementById("lbClose").addEventListener("click", close);
   document.getElementById("lbPrev").addEventListener("click", (e) => { e.stopPropagation(); show(current - 1, -1); });
@@ -204,6 +342,28 @@ function setupGalleryLightbox() {
     if (e.key === "ArrowLeft") show(current - 1, -1);
     if (e.key === "ArrowRight") show(current + 1, 1);
   });
+}
+
+/* ---------- 5c. NAVIGATION BAR ---------- */
+function setupNav() {
+  const nav = document.getElementById("nav");
+  if (!nav) return;
+  const onScroll = () => nav.classList.toggle("is-scrolled", window.scrollY > 60);
+  onScroll();
+  window.addEventListener("scroll", onScroll, { passive: true });
+
+  // Menu thu gọn (hamburger) cho mobile
+  const toggle = document.getElementById("navToggle");
+  const links = document.getElementById("navLinks");
+  if (!toggle || !links) return;
+  const setOpen = (open) => {
+    nav.classList.toggle("is-open", open);
+    toggle.setAttribute("aria-expanded", open ? "true" : "false");
+    toggle.setAttribute("aria-label", open ? "Đóng menu" : "Mở menu");
+  };
+  toggle.addEventListener("click", () => setOpen(!nav.classList.contains("is-open")));
+  // chạm vào 1 mục thì đóng menu lại
+  links.addEventListener("click", (e) => { if (e.target.closest("a")) setOpen(false); });
 }
 
 /* ---------- 5b. MỞ PHONG BAO (MODAL QR) ---------- */
