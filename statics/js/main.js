@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", () => {
   renderCalendar();
   startCountdown();
   setupGalleryLightbox();
+  setupGiftEnvelope();
   setupCopyButtons();
   setupReveal();
 });
@@ -202,6 +203,24 @@ function setupGalleryLightbox() {
     if (e.key === "Escape") close();
     if (e.key === "ArrowLeft") show(current - 1, -1);
     if (e.key === "ArrowRight") show(current + 1, 1);
+  });
+}
+
+/* ---------- 5b. MỞ PHONG BAO (MODAL QR) ---------- */
+function setupGiftEnvelope() {
+  const envelope = document.getElementById("giftEnvelope");
+  const modal = document.getElementById("giftModal");
+  if (!envelope || !modal) return;
+  const closeBtn = document.getElementById("giftModalClose");
+
+  const open = () => { modal.classList.add("is-open"); modal.setAttribute("aria-hidden", "false"); };
+  const close = () => { modal.classList.remove("is-open"); modal.setAttribute("aria-hidden", "true"); };
+
+  envelope.addEventListener("click", open);
+  closeBtn.addEventListener("click", close);
+  modal.addEventListener("click", (e) => { if (e.target === modal) close(); });
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && modal.classList.contains("is-open")) close();
   });
 }
 

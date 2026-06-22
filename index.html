@@ -171,6 +171,7 @@
           <div class="timeline__dot"></div>
           <div class="timeline__body">
             <h4>Di chuyển về tư gia nhà trai</h4>
+            <small>Xóm 21, Xã Thiên Nhẫn, Tỉnh Nghệ An</small>
           </div>
         </div>
         <div class="timeline__item">
@@ -178,6 +179,7 @@
           <div class="timeline__dot"></div>
           <div class="timeline__body">
             <h4>Đón dâu</h4>
+            <small>Xóm Vĩnh Tháp, Xã Hợp Minh, Tỉnh Nghệ An</small>
           </div>
         </div>
         <div class="timeline__item">
@@ -185,7 +187,7 @@
           <div class="timeline__dot"></div>
           <div class="timeline__body">
             <h4>Dự tiệc tại tư gia nhà trai</h4>
-            <small>Xóm 21, Xã Thiên Nhẫn, Tỉnh Nghệ An</small>
+            <small>Sân bóng Tam Giáp - Nam Kim, Xã Thiên Nhẫn, Tỉnh Nghệ An</small>
           </div>
         </div>
       </div>
@@ -194,29 +196,16 @@
     <!-- ============ 7. PHONG BAO MỪNG CƯỚI ============ -->
     <section class="section reveal">
       <div class="band"><span class="band__deco">&#10070;</span>Phong Bao Mừng Cưới<span class="band__deco">&#10070;</span></div>
-      <p class="section__lead">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi. Nếu ở xa, bạn có thể gửi lời chúc mừng qua mã QR bên dưới.</p>
-      <div class="gifts">
-        <div class="gift">
-          <h4 class="gift__title">Chú Rể · Hồng Lĩnh</h4>
-          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-chu-re.png" alt="Mã QR chuyển khoản Hồng Lĩnh" /></div>
-          <ul class="gift__info">
-            <li><span>Ngân hàng</span><b>VIB</b></li>
-            <li><span>Chủ tài khoản</span><b>Hồng Lĩnh</b></li>
-            <li><span>Số tài khoản</span><b class="gift__acc">005704060245366</b></li>
-          </ul>
-          <button class="gift__copy" data-copy="005704060245366">Sao chép số tài khoản</button>
-        </div>
+      <p class="section__lead">Sự hiện diện của bạn là niềm vinh hạnh của chúng tôi. Và nếu muốn trao thêm chút tấm lòng mừng cưới, cô dâu chú rể rất sẵn lòng đón nhận qua phiên bản "phong bao QR 4.0" bên dưới nha.</p>
 
-        <div class="gift">
-          <h4 class="gift__title">Cô Dâu · Ngọc Ánh</h4>
-          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-co-dau.png" alt="Mã QR chuyển khoản Ngọc Ánh" /></div>
-          <ul class="gift__info">
-            <li><span>Ngân hàng</span><b>BIDV</b></li>
-            <li><span>Chủ tài khoản</span><b>Ngọc Ánh</b></li>
-            <li><span>Số tài khoản</span><b class="gift__acc">5180607149</b></li>
-          </ul>
-          <button class="gift__copy" data-copy="5180607149">Sao chép số tài khoản</button>
-        </div>
+      <div class="envelope-wrap">
+        <button class="envelope" id="giftEnvelope" type="button" aria-label="Mở phong bao mừng cưới">
+          <span class="envelope__body">
+            <span class="envelope__flap"></span>
+            <span class="envelope__seal">&#22221;</span>
+          </span>
+          <span class="envelope__hint">Chạm để mở phong bao QR</span>
+        </button>
       </div>
     </section>
 
@@ -228,6 +217,38 @@
       <p class="footer__msg">Rất hân hạnh được đón tiếp &amp; chung vui cùng bạn trong ngày trọng đại!</p>
     </footer>
   </main>
+
+  <!-- ============ MODAL PHONG BAO (QR) ============ -->
+  <div class="gift-modal" id="giftModal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Mã QR mừng cưới">
+    <div class="gift-modal__panel">
+      <button class="gift-modal__close" id="giftModalClose" aria-label="Đóng">&times;</button>
+      <div class="gift-modal__double">&#22221;</div>
+      <p class="gift-modal__lead">Quét mã QR để gửi lời chúc mừng tới cô dâu &amp; chú rể</p>
+      <div class="gifts">
+        <div class="gift">
+          <h4 class="gift__title">Chú Rể · Hồng Lĩnh</h4>
+          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-chu-re.png" alt="Mã QR chuyển khoản Hồng Lĩnh" /></div>
+          <ul class="gift__info">
+            <li><span>Ngân hàng</span><b>VIB</b></li>
+            <li><span>Chủ tài khoản</span><b>Hồng Lĩnh</b></li>
+            <li><span>STK</span><b class="gift__acc">005704060245366</b></li>
+          </ul>
+          <button class="gift__copy" data-copy="005704060245366">Sao chép số tài khoản</button>
+        </div>
+
+        <div class="gift">
+          <h4 class="gift__title">Cô Dâu · Ngọc Ánh</h4>
+          <div class="gift__qr"><img loading="lazy" src="statics/images/qr-co-dau.png" alt="Mã QR chuyển khoản Ngọc Ánh" /></div>
+          <ul class="gift__info">
+            <li><span>Ngân hàng</span><b>BIDV</b></li>
+            <li><span>Chủ tài khoản</span><b>Ngọc Ánh</b></li>
+            <li><span>STK</span><b class="gift__acc">5180607149</b></li>
+          </ul>
+          <button class="gift__copy" data-copy="5180607149">Sao chép số tài khoản</button>
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- ============ LIGHTBOX ============ -->
   <div class="lightbox" id="lightbox" aria-hidden="true">

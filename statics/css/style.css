@@ -472,6 +472,97 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 .gift__acc { color: var(--maroon) !important; letter-spacing: .04em; }
 .gift__copy { font-family: var(--sans); font-size: .85rem; }
 
+/* ===================== PHONG BAO (LÌ XÌ) ===================== */
+.envelope-wrap { display: flex; justify-content: center; margin-top: 26px; }
+.envelope {
+  background: none; border: none; cursor: pointer; padding: 10px;
+  display: flex; flex-direction: column; align-items: center; gap: 16px;
+  animation: envFloat 3.4s ease-in-out infinite;
+}
+.envelope__body {
+  position: relative;
+  width: 230px; height: 150px;
+  border-radius: 12px;
+  background: linear-gradient(150deg, var(--red), var(--maroon-dark));
+  border: 1px solid rgba(230,207,142,.5);
+  box-shadow: 0 18px 36px -16px rgba(78,12,24,.7), inset 0 0 30px rgba(0,0,0,.18);
+  overflow: hidden;
+  transition: transform .35s ease, box-shadow .35s ease;
+}
+/* đường gân vàng trang trí góc dưới */
+.envelope__body::before,
+.envelope__body::after {
+  content: ""; position: absolute; bottom: 0; width: 60%; height: 100%;
+  background: linear-gradient(135deg, transparent 48%, rgba(230,207,142,.28) 50%, transparent 52%);
+}
+.envelope__body::before { left: 0; }
+.envelope__body::after  { right: 0; transform: scaleX(-1); }
+/* nắp phong bao hình tam giác phía trên */
+.envelope__flap {
+  position: absolute; top: 0; left: 0; right: 0; height: 78px;
+  background: linear-gradient(180deg, var(--red), #7a1626);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  border-bottom: 1px solid rgba(230,207,142,.45);
+  transform-origin: top center;
+  transition: transform .45s ease, opacity .45s ease;
+  z-index: 3;
+}
+/* dấu triện chữ Hỷ ở giữa */
+.envelope__seal {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 54px; height: 54px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 50% 38%, var(--gold-light), var(--gold));
+  color: var(--maroon-dark); font-family: var(--serif); font-size: 1.5rem; font-weight: 700;
+  box-shadow: 0 4px 12px -4px rgba(0,0,0,.5), 0 0 0 3px rgba(255,255,255,.25) inset;
+  z-index: 4;
+}
+.envelope__hint {
+  font-family: var(--sans); font-size: .85rem; color: var(--maroon);
+  letter-spacing: .02em;
+}
+.envelope:hover .envelope__body,
+.envelope:focus-visible .envelope__body {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 24px 44px -16px rgba(78,12,24,.8), 0 0 0 4px rgba(230,207,142,.25);
+}
+.envelope:hover .envelope__flap,
+.envelope:focus-visible .envelope__flap {
+  transform: rotateX(150deg); opacity: .55;
+}
+.envelope:focus { outline: none; }
+
+/* ===================== MODAL PHONG BAO (QR) ===================== */
+.gift-modal {
+  position: fixed; inset: 0; z-index: 96;
+  background: rgba(28,6,12,.94);
+  display: flex; align-items: center; justify-content: center;
+  padding: 22px;
+  opacity: 0; visibility: hidden; transition: opacity .3s ease, visibility .3s ease;
+}
+.gift-modal.is-open { opacity: 1; visibility: visible; }
+.gift-modal__panel {
+  position: relative;
+  width: 100%; max-width: 560px;
+  max-height: 90vh; overflow-y: auto;
+  background: var(--paper);
+  border: 1px solid rgba(230,207,142,.5);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 60px -20px rgba(0,0,0,.7);
+  padding: 30px 22px 26px;
+  text-align: center;
+  transform: translateY(16px) scale(.97);
+  transition: transform .35s ease;
+}
+.gift-modal.is-open .gift-modal__panel { transform: none; }
+.gift-modal__double { color: var(--gold); font-size: 1.8rem; line-height: 1; }
+.gift-modal__lead { color: var(--ink-soft); font-size: .95rem; margin: 6px auto 18px; max-width: 380px; }
+.gift-modal__close {
+  position: absolute; top: 8px; right: 14px;
+  background: none; border: none; color: var(--maroon);
+  font-size: 2rem; line-height: 1; cursor: pointer;
+}
+
 /* ===================== FOOTER ===================== */
 .footer {
   text-align: center;
@@ -551,6 +642,7 @@ section .map__btn { margin-left: auto; margin-right: auto; }
 @keyframes floatIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: none; } }
 @keyframes scrollDot { 0% { opacity: 0; top: 7px; } 50% { opacity: 1; } 100% { opacity: 0; top: 22px; } }
 @keyframes spin { to { transform: rotate(360deg); } }
+@keyframes envFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 @keyframes lbSlide {
   from { opacity: 0; transform: translateX(var(--lb-from, 28px)) scale(.97); }
   to   { opacity: 1; transform: translateX(0) scale(1); }
