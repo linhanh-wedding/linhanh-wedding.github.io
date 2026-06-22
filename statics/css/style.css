@@ -664,6 +664,9 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .gifts, .parties { grid-template-columns: 1fr; }
   .gift__qr { width: 180px; height: 180px; }
   .hero__roles { gap: 14px; }
+  /* Mobile: thu nhỏ chữ 囍 và tên để không tràn lên mặt ảnh */
+  .hero__double { font-size: 1.2rem; margin: 0 0 4px; }
+  .hero__names { font-size: clamp(1.6rem, 7.4vw, 2.3rem); }
 }
 
 @media (prefers-reduced-motion: reduce) {
