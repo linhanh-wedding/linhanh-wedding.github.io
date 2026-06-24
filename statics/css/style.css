@@ -310,19 +310,15 @@ img { display: block; max-width: 100%; }
 /* ===================== HERO ===================== */
 .hero {
   position: relative;
-  min-height: 100svh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
   text-align: center;
   color: #fff;
-  padding: 96px 24px 64px;   /* leave top space for the fixed nav bar */
   overflow: hidden;
 }
-.hero__media { position: absolute; inset: 0; z-index: 0; }
+/* Image flows at its natural height (may run past the viewport); the text is
+   overlaid at the top so it always sits over the trees, never on the faces. */
+.hero__media { position: relative; z-index: 0; }
 .hero__media img {
-  width: 100%; height: 100%; object-fit: cover; object-position: center 22%;
+  width: 100%; height: auto; display: block;
   filter: brightness(1.1);
 }
 .hero__overlay {
@@ -335,24 +331,27 @@ img { display: block; max-width: 100%; }
       rgba(40,8,16,.08) 70%,
       rgba(40,8,16,.42) 100%);
 }
-.hero__content { position: relative; z-index: 1; }
+.hero__content {
+  position: absolute; top: 0; left: 0; right: 0; z-index: 1;
+  padding: 96px 24px 0;   /* top space for the fixed nav bar */
+}
 .hero__welcome {
   font-family: var(--script);
-  font-size: clamp(2rem, 9vw, 3.4rem);
+  font-size: clamp(1.8rem, 6vw, 2.7rem);
   color: var(--gold-light);
   white-space: nowrap;   /* keep one line to match the names width */
   text-shadow: 0 2px 6px rgba(0,0,0,.55), 0 4px 22px rgba(0,0,0,.6);
 }
 .hero__double {
-  font-size: 1.7rem; color: var(--gold);
-  margin: 2px 0 6px;
+  font-size: 1.4rem; color: var(--gold);
+  margin: 0 0 4px;
   text-shadow: 0 2px 10px rgba(0,0,0,.7);
 }
 .hero__names {
   font-family: var(--serif);
   font-weight: 600;
-  font-size: clamp(2rem, 10vw, 3.4rem);
-  line-height: 1.1;
+  font-size: clamp(1.8rem, 6vw, 2.7rem);
+  line-height: 1.12;
   letter-spacing: .01em;
   text-shadow: 0 2px 8px rgba(0,0,0,.6), 0 6px 26px rgba(0,0,0,.65);
 }
@@ -704,16 +703,27 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   font-family: var(--sans); font-size: .85rem; color: var(--maroon);
   letter-spacing: .02em;
 }
-.envelope:hover .envelope__body,
+/* Hover open effect for mouse devices only. On touch (iPhone/iPad) :hover would
+   make the first tap only trigger hover, requiring a second tap to open. */
+@media (hover: hover) {
+  .envelope:hover .envelope__body {
+    transform: translateY(-4px) scale(1.03);
+    box-shadow: 0 24px 44px -16px rgba(78,12,24,.8), 0 0 0 4px rgba(230,207,142,.25);
+  }
+  .envelope:hover .envelope__flap {
+    transform: rotateX(150deg); opacity: .55;
+  }
+}
+/* Keyboard focus keeps the effect without breaking touch */
 .envelope:focus-visible .envelope__body {
   transform: translateY(-4px) scale(1.03);
   box-shadow: 0 24px 44px -16px rgba(78,12,24,.8), 0 0 0 4px rgba(230,207,142,.25);
 }
-.envelope:hover .envelope__flap,
 .envelope:focus-visible .envelope__flap {
   transform: rotateX(150deg); opacity: .55;
 }
 .envelope:focus { outline: none; }
+.envelope { touch-action: manipulation; }   /* remove 300ms tap delay */
 
 /* ===================== GIFT ENVELOPE MODAL (QR) ===================== */
 .gift-modal {
@@ -911,9 +921,8 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .gifts, .parties { grid-template-columns: 1fr; }
   .gift__qr { width: 180px; height: 180px; }
   .hero__roles { gap: 14px; }
-  /* Mobile: pull the image down to start at the nav + compact the text so it doesn't hit the faces */
-  .hero { padding-top: 84px; }            /* lower the text block for balance */
-  .hero__media { top: 54px; }              /* image starts right below the banner */
+  /* Mobile: compact the text block so it stays above the faces */
+  .hero__content { padding-top: 76px; }
   .hero__welcome { font-size: clamp(1.7rem, 8vw, 2.6rem); }
   .hero__double { font-size: 1rem; margin: 0 0 2px; }   /* smaller 囍 */
   .hero__names { font-size: clamp(1.55rem, 7.2vw, 2.2rem); line-height: 1.04; }  /* tighter line spacing */

@@ -51,7 +51,33 @@ document.addEventListener("DOMContentLoaded", () => {
   setupGiftEnvelope();
   setupCopyButtons();
   setupReveal();
+  preloadAssets();
 });
+
+/* ---------- WARM IMAGE CACHE ----------
+   When the page is idle, preload album + journey + QR images so they appear
+   instantly (no lag) when the user scrolls down. */
+function preloadAssets() {
+  const warm = () => {
+    const urls = [
+      ...PHOTOS.map((f) => PHOTO_DIR + f),
+      ...JOURNEY.map((f) => JOURNEY_DIR + f),
+      "statics/images/qr-chu-re.png",
+      "statics/images/qr-co-dau.png"
+    ];
+    // Load one by one with a small gap to avoid competing for bandwidth.
+    let i = 0;
+    const next = () => {
+      if (i >= urls.length) return;
+      const im = new Image();
+      im.onload = im.onerror = () => setTimeout(next, 120);
+      im.src = urls[i++];
+    };
+    next();
+  };
+  if ("requestIdleCallback" in window) requestIdleCallback(warm, { timeout: 3000 });
+  else window.addEventListener("load", () => setTimeout(warm, 800));
+}
 
 /* ---------- POPULATE ALBUM (RANDOM) & SIDE PINS ---------- */
 function renderPhotos() {
@@ -543,10 +569,12 @@ function setupReveal() {
     els.forEach(e => e.classList.add("is-visible"));
     return;
   }
+  // rootMargin bottom +600px reveals each section (and loads its images) 600px
+  // before it scrolls into view, so content is ready and scrolling feels smooth.
   const io = new IntersectionObserver((entries) => {
     entries.forEach(en => {
       if (en.isIntersecting) { en.target.classList.add("is-visible"); io.unobserve(en.target); }
     });
-  }, { threshold: 0.12 });
+  }, { threshold: 0, rootMargin: "0px 0px 600px 0px" });
   els.forEach(e => io.observe(e));
 }
