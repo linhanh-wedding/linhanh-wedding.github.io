@@ -921,8 +921,14 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .gifts, .parties { grid-template-columns: 1fr; }
   .gift__qr { width: 180px; height: 180px; }
   .hero__roles { gap: 14px; }
-  /* Mobile: compact the text block so it stays above the faces */
-  .hero__content { padding-top: 76px; }
+  /* Mobile: the natural-height image is too short (faces sit ~30% down), so the
+     text block ran onto the faces on narrow phones (e.g. iPhone 14 Pro). Restore
+     the "cover" hero — image fills a full-height box, pushing the faces into the
+     lower portion — which guarantees a clear zone up top for the text. */
+  .hero { min-height: 100svh; overflow: hidden; }
+  .hero__media { position: absolute; inset: 0; }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
+  .hero__content { padding-top: 78px; }
   .hero__welcome { font-size: clamp(1.7rem, 8vw, 2.6rem); }
   .hero__double { font-size: 1rem; margin: 0 0 2px; }   /* smaller 囍 */
   .hero__names { font-size: clamp(1.55rem, 7.2vw, 2.2rem); line-height: 1.04; }  /* tighter line spacing */
