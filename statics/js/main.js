@@ -374,8 +374,11 @@ function startCountdown() {
     set("mins", Math.floor((s % 3600) / 60));
     set("secs", s % 60);
   };
-  tick();
+  // Declare `timer` before the first tick(): on the wedding day the diff is <= 0,
+  // so tick() runs clearInterval(timer) immediately — referencing it before the
+  // declaration threw a TDZ error that aborted the whole init script.
   const timer = setInterval(tick, 1000);
+  tick();
 }
 
 /* ---------- 4b. ALBUM PAGINATION (9 photos / page) ---------- */

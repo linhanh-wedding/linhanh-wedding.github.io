@@ -921,18 +921,14 @@ section .map__btn { margin-left: auto; margin-right: auto; }
   .gifts, .parties { grid-template-columns: 1fr; }
   .gift__qr { width: 180px; height: 180px; }
   .hero__roles { gap: 14px; }
-  /* Mobile: the natural-height image is too short (faces sit ~30% down), so the
-     text block ran onto the faces on narrow phones (e.g. iPhone 14 Pro). Restore
-     the "cover" hero — image fills a full-height box, pushing the faces into the
-     lower portion — which guarantees a clear zone up top for the text. */
-  .hero { min-height: 100svh; overflow: hidden; }
-  .hero__media { position: absolute; inset: 0; }
-  .hero__media img { width: 100%; height: 100%; object-fit: cover; object-position: center 26%; }
-  .hero__content { padding-top: 78px; }
-  .hero__welcome { font-size: clamp(1.7rem, 8vw, 2.6rem); }
-  .hero__double { font-size: 1rem; margin: 0 0 2px; }   /* smaller 囍 */
-  .hero__names { font-size: clamp(1.55rem, 7.2vw, 2.2rem); line-height: 1.04; }  /* tighter line spacing */
-  .hero__date { margin-top: 6px; font-size: .92rem; }
+  /* Mobile: the natural-height image is short (faces sit ~30% down), so keep the
+     overlaid text compact and high so it always clears the faces on narrow phones
+     (iPhone 14 Pro / Pro Max). Layout stays in normal flow — only sizes change. */
+  .hero__content { padding-top: 60px; }
+  .hero__welcome { font-size: clamp(1.35rem, 6.5vw, 2rem); }
+  .hero__double { font-size: .9rem; margin: 0 0 2px; }   /* smaller 囍 */
+  .hero__names { font-size: clamp(1.3rem, 6.2vw, 1.9rem); line-height: 1.05; }  /* tighter line spacing */
+  .hero__date { margin-top: 5px; font-size: .82rem; letter-spacing: .1em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
