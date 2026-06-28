@@ -43,8 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
   renderPhotos();
   setupGalleryPager();
   setupJourneyCord();
-  renderHeroDate();
-  setupHeroFit();
   renderCalendar();
   startCountdown();
   setupGalleryLightbox();
@@ -269,45 +267,8 @@ function setupMusic() {
   );
 }
 
-/* ---------- 2. SHOW DATE IN HERO ---------- */
-function renderHeroDate() {
-  const el = document.getElementById("heroDate");
-  if (!el) return;
-  const wd = getWeddingDate();
-  const days = ["Chủ Nhật","Thứ Hai","Thứ Ba","Thứ Tư","Thứ Năm","Thứ Sáu","Thứ Bảy"];
-  const dow = days[wd.getDay()];
-  const dd = String(wd.getDate()).padStart(2, "0");
-  const mo = String(wd.getMonth() + 1).padStart(2, "0");
-  let txt = `${dow}, ngày ${dd} . ${mo} . ${wd.getFullYear()}`;
-  if (WEDDING_CONFIG.lunar) txt += ` · ${WEDDING_CONFIG.lunar}`;
-  el.textContent = txt;
-}
-
-/* ---------- 2b. FIT "WELCOME" WIDTH TO MATCH THE NAMES LINE ---------- */
-function setupHeroFit() {
-  const fit = () => {
-    const w = document.querySelector(".hero__welcome");
-    const n = document.querySelector(".hero__names");
-    if (!w || !n) return;
-    // measure the ACTUAL text width (not the block box) via Range
-    const measure = (el) => {
-      const r = document.createRange();
-      r.selectNodeContents(el);
-      return r.getBoundingClientRect().width;
-    };
-    const namesW = measure(n);
-    w.style.fontSize = "";                       // reset to default size to measure the baseline
-    const base = parseFloat(getComputedStyle(w).fontSize);
-    const welW = measure(w);
-    if (!namesW || !welW) return;
-    w.style.fontSize = (base * namesW / welW).toFixed(2) + "px";
-  };
-  if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
-  window.addEventListener("load", fit);
-  let t;
-  window.addEventListener("resize", () => { clearTimeout(t); t = setTimeout(fit, 120); });
-  fit();
-}
+/* The hero welcome text, names and date are now baked into header-2.png, so the
+   former renderHeroDate() / setupHeroFit() helpers are no longer needed. */
 
 /* ---------- 3. MONTH CALENDAR ---------- */
 function renderCalendar() {
